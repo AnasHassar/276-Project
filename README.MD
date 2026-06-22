@@ -1,42 +1,87 @@
-SFSS Nexus
-Abstract
-SFSS Nexus is a web application for SFU students that collects the information they check most often during a school day and puts it on a single page. After a student logs in, they see a dashboard with the next buses leaving their campus, the current weather and a short forecast for the mountain, upcoming campus events, and a list of student clubs. Right now that information is spread across several different apps and websites. We are building the Nexus on a Spring Boot backend and it pulls live data from public REST APIs such as TransLink’s transit feed and a weather service. The point of the app is to save students time by turning four or five separate tabs into one.
+# SFSS Nexus
 
-The Problem
+## Overview
 
-Getting through a day at SFU means juggling a handful of various tools. To check when the next bus leaves for the SkyTrain, a student would open the TransLink Transit app or Google Maps. Before heading up Burnaby Mountain they would check a weather app. To find out what's happening on campus they end up scrolling through club Instagram pages, Reddit, and occasionally posters on the wall. When they need to find a classroom they open SFU Snap or wander around till they find it.
+SFSS Nexus is a web application for SFU students that consolidates the information they check most often during a school day into a single dashboard. After logging in, students see real-time bus schedules, weather forecasts, upcoming campus events, and student clubs—all powered by a Spring Boot backend that integrates live data from public REST APIs.
 
-None of these tools connect to each other, or are tailored to an SFU student’s actual day. So a simple question like “what should I check before leaving for campus” turns into opening various different apps. That is the problem we aim to fix with SFSS Nexus.
+**Goal:** Save students time by turning multiple separate apps and tabs into one unified platform.
 
-Existing Systems
+---
 
-Alternative systems are more specific to what SFU Nexus plans to offer. Google Maps gives information on traffic and transit conditions. It also gives estimated arrival times and recommended routes for reaching selected destinations. The SFU websites gives campus information including news, academic advising and educational resources. The Weather Channel website gives information on the current and future forecast of a selected city. SFU Snap is a student-made app for finding rooms and buildings and it does that one job.
+## The Problem
 
-What none of these offer is one student-facing page that pulls the useful parts together, the kind of page you would open every morning.
+Getting through a day at SFU means juggling several different tools and platforms:
 
-How Nexus Improves On it
+- **Transit:** Checking TransLink Transit app or Google Maps for bus schedules
+- **Weather:** Opening a weather app before heading to Burnaby Mountain
+- **Events & News:** Scrolling through club Instagram pages, Reddit, and campus posters
+- **Navigation:** Using SFU Snap or wandering around to find classrooms
 
-Nexus plans to condense information relevant to a student under one web application. Information regarding forecast, transit conditions and campus events would conveniently be located in one spot. A potential use case of the app may be opening it prior to commuting to campus, allowing users to check on transit and weather conditions to remain punctual, or checking for potential closures due to weather conditions or holidays.
+These tools don't connect to each other or account for an SFU student's specific workflow. A simple question like *"What should I check before leaving for campus?"* requires opening 4-5 different apps.
 
-Information on classroom locations and clubs may also increase the tailorability towards SFU students. 
-Target Audience
-Our main users are SFU students, especially the large number who commute to the Burnaby campus and care about bus timing and mountain weather every day. Faculty and staff who are on campus are a secondary audience. The public parts of the app, like campus info and the events list, could also be useful to prospective students and visitors.
-Scope
+---
 
-Future/Stretch
-Messaging between users/groups (social media app?)
-Club information
-Classroom map
-Reminders tab for courses
-Technical (APIs, etc.)
-USES:
-Translink API
-Weather API
-Eventbrite API
+## Current Solutions & Limitations
 
+Existing systems address parts of the problem but lack integration:
 
-FEATURES:
-Login / User profiles
-Select campus to get information of (Surrey, Burnaby, ect)
-Event / News tab
+| System | What It Offers |
+|--------|---|
+| **Google Maps** | Traffic, transit conditions, arrival estimates |
+| **SFU Website** | Campus info, news, academic resources |
+| **Weather Channel** | Current weather and forecasts |
+| **SFU Snap** | Room/building finder |
 
+**The gap:** No single student-facing page that brings together all the useful information from these sources.
+
+---
+
+## How SFSS Nexus Improves This
+
+Nexus consolidates student-relevant information into one web application:
+
+- **All-in-one dashboard** for transit, weather, events, and campus info
+- **Use cases:**
+  - Check transit and weather before commuting to stay on time
+  - View potential closures due to weather or holidays
+  - Browse campus events and student clubs
+  - Find classroom locations
+
+---
+
+## Target Audience
+
+- **Primary:** SFU students, especially commuters to Burnaby campus who check bus timing and mountain weather daily
+- **Secondary:** Faculty and staff on campus
+- **Tertiary:** Prospective students and campus visitors (public-facing features)
+
+---
+
+## Features
+
+### Current Features
+
+- Login and user profiles
+- Campus selection (Burnaby, Surrey, etc.)
+- Event and news tab
+
+### Future/Stretch Features
+
+- Messaging between users and groups
+- Expanded club information
+- Interactive classroom map
+- Reminders and task management for courses
+- Additional campus functionality
+
+---
+
+## Technical Stack
+
+### Backend
+- **Framework:** Spring Boot
+- **Language:** Java
+
+### APIs & Data Sources
+- **TransLink API** – Transit schedules and real-time bus information
+- **Weather API** – Current conditions and forecasts
+- **Eventbrite API** – Campus events
