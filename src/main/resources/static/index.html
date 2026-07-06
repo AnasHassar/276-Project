@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFSS Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- css order matters here, don't swap these two -->
+<link rel="stylesheet" href="css/weather.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- header -->
+  <header class="app-header">
+    <h1>Hi, <span id="userName">Name</span></h1>
+    <button class="profile-btn" aria-label="Profile">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="search-bar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+    </svg>
+    <input type="text" placeholder="Search services, events...">
+  </div>
+
+  <!-- weather widget, pulls live data -->
+  <div class="weather-widget">
+    <div class="campus">SFU BURNABY</div>
+
+    <div class="main-row">
+      <div class="temp" id="temp">-</div>
+      <div class="icon-area">
+        <img class="icon" id="icon" src="" alt="Weather">
+        <div class="condition" id="condition">Loading...</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Feels like</div>
+        <div class="value" id="feelsLike">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Humidity</div>
+        <div class="value" id="humidity">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Wind</div>
+        <div class="value" id="wind">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Rain</div>
+        <div class="value" id="rain">-</div>
+      </div>
+    </div>
+
+    <div class="credit">Weather data by Open-Meteo.com, Animated Icons by amCharts.com</div>
+  </div>
+
+  <!-- bus card -->
+  <section class="card translink-card">
+    <span class="card-icon">🚌</span>
+    <div class="card-text">
+      <h3>Translink Bus</h3>
+      <p>Real-time bus schedules</p>
+    </div>
+  </section>
+
+  <!-- events + clubs shortcuts -->
+  <div class="grid-2">
+    <a href="events.html" class="card mini-card">
+      <span class="card-icon">🎉</span>
+      <h3>Events</h3>
+      <p>Find upcoming events</p>
+    </a>
+    <a href="clubs.html" class="card mini-card">
+      <span class="card-icon">👥</span>
+      <h3>Clubs</h3>
+      <p>Join a student club</p>
+    </a>
+  </div>
+
+  <!-- upcoming events -->
+  <section class="upcoming">
+    <h2>Upcoming Events</h2>
+    <div class="card empty-state">
+      <p>No events loaded yet — this connects once the events feature is live.</p>
+    </div>
+  </section>
+
+  <!-- nav bar -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="clubs.html" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><path d="M14.5 15.2c2.7.3 4.5 2 4.5 4.8"/></svg>
+      <span>Clubs</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="15" rx="2"/><path d="M8 21h8"/><circle cx="8.5" cy="14.5" r="1"/><circle cx="15.5" cy="14.5" r="1"/></svg>
+      <span>Bus</span>
+    </a>
+    <a href="events.html" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+      <span>Events</span>
+    </a>
+  </nav>
+
+</div>
+
+<script src="js/weather.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
