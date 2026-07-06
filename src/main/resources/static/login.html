@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — SFSS Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app auth-page">
+
+  <a href="index.html" class="back-link" aria-label="Back to home">←</a>
+
+  <div class="auth-brand">
+    <span class="brand-name">Nexus</span>
+    <p>Welcome back! Please enter your details to sign in.</p>
+  </div>
+
+  <!-- TODO: hook this up to real login, redirect by role after -->
+  <form class="card auth-form">
+    <label>Email or Student ID
+      <input type="text" placeholder="Enter your email or student ID">
+    </label>
+    <label>Password
+      <input type="password" placeholder="Enter your password">
+    </label>
+    <a href="#" class="forgot-link">Forgot Password?</a>
+    <button type="submit" class="btn-details" style="margin-top:8px;">Login</button>
+  </form>
+
+  <a href="login.html?role=exec" class="exec-link">Login as an Executive</a>
+
+</div>
+
+</body>
+</html>
