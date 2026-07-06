@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Post Club Event</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="app-header">
+    <a href="index.html" class="back-link" aria-label="Back to home">←</a>
+    <h1>Post Club Event</h1>
+    <span style="width:40px"></span>
+  </header>
+
+  <div class="card admin-form-page">
+    <h2>New Club Event</h2>
+    <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 18px">
+      Events posted here appear in the public Events feed immediately.
+    </p>
+
+    <form id="eventForm">
+      <div class="form-group">
+        <label for="title">Event Title *</label>
+        <input id="title" type="text" placeholder="e.g. SFU Coding Club Hackathon" required>
+      </div>
+      <div class="form-group">
+        <label for="organizer">Organizer / Club Name</label>
+        <input id="organizer" type="text" placeholder="e.g. SFU Coding Club">
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date &amp; Time *</label>
+        <input id="startDate" type="datetime-local" required>
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date &amp; Time</label>
+        <input id="endDate" type="datetime-local">
+      </div>
+      <div class="form-group">
+        <label for="location">Location / Venue</label>
+        <input id="location" type="text" placeholder="e.g. AQ 5040, Burnaby Campus">
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Describe the event…"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="imageUrl">Image URL (optional)</label>
+        <input id="imageUrl" type="url" placeholder="https://…">
+      </div>
+      <div class="form-group">
+        <label for="url">Event Link (optional)</label>
+        <input id="url" type="url" placeholder="https://…">
+      </div>
+      <div class="form-group">
+        <label for="tags">Tags (comma-separated)</label>
+        <input id="tags" type="text" placeholder="tech, career, social">
+      </div>
+
+      <button type="submit" class="btn-submit">Post Event</button>
+      <p class="form-message" id="formMsg"></p>
+    </form>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="clubs.html" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><path d="M14.5 15.2c2.7.3 4.5 2 4.5 4.8"/></svg>
+      <span>Clubs</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="15" rx="2"/><path d="M8 21h8"/><circle cx="8.5" cy="14.5" r="1"/><circle cx="15.5" cy="14.5" r="1"/></svg>
+      <span>Bus</span>
+    </a>
+    <a href="events.html" class="nav-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+      <span>Events</span>
+    </a>
+  </nav>
+
+</div>
+
+<script>
+document.getElementById('eventForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  msg.textContent = '';
+  msg.className = 'form-message';
+
+  const body = {
+    title:       document.getElementById('title').value.trim(),
+    organizer:   document.getElementById('organizer').value.trim(),
+    startDate:   document.getElementById('startDate').value,
+    endDate:     document.getElementById('endDate').value,
+    location:    document.getElementById('location').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    imageUrl:    document.getElementById('imageUrl').value.trim(),
+    url:         document.getElementById('url').value.trim(),
+    tags:        document.getElementById('tags').value.trim()
+  };
+
+  try {
+    const res = await fetch('/api/admin/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Server error');
+    }
+    msg.textContent = '✓ Event posted successfully!';
+    msg.className = 'form-message success';
+    document.getElementById('eventForm').reset();
+  } catch (err) {
+    msg.textContent = '✗ ' + err.message;
+    msg.className = 'form-message error';
+  }
+});
+</script>
+</body>
+</html>

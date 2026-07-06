@@ -9,6 +9,7 @@
 <!-- css order matters here, don't swap these two -->
 <link rel="stylesheet" href="css/weather.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
 </head>
 <body>
 
@@ -91,9 +92,12 @@
 
   <!-- upcoming events -->
   <section class="upcoming">
-    <h2>Upcoming Events</h2>
-    <div class="card empty-state">
-      <p>No events loaded yet — this connects once the events feature is live.</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h2 style="margin:0">Upcoming Events</h2>
+      <a href="events.html" style="color:var(--red-bright);font-size:0.78rem;font-weight:600;text-decoration:none">See all →</a>
+    </div>
+    <div id="homeEventsList">
+      <div class="skeleton" style="height:120px"></div>
     </div>
   </section>
 
@@ -121,5 +125,36 @@
 
 <script src="js/weather.js"></script>
 <script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/events?')
+    .then(r => r.json())
+    .then(events => {
+      const container = document.getElementById('homeEventsList');
+      if (!events.length) {
+        container.innerHTML = '<div class="card empty-state"><p>No upcoming events right now.</p></div>';
+        return;
+      }
+      container.innerHTML = events.slice(0, 3).map(ev => {
+        const d = ev.startDate ? new Date(ev.startDate) : null;
+        const dateStr = d ? d.toLocaleDateString('en-CA', {month:'short',day:'numeric'}) : 'TBA';
+        const timeStr = d ? d.toLocaleTimeString('en-CA', {hour:'numeric',minute:'2-digit'}) : '';
+        return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="location.href='event-detail.html?id=${ev.id}'">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+            <div style="flex:1">
+              <p style="margin:0 0 4px;font-weight:700;font-size:0.92rem">${ev.title}</p>
+              <p style="margin:0;color:var(--text-muted);font-size:0.78rem">${dateStr}${timeStr ? ' · '+timeStr : ''}${ev.location ? ' · '+ev.location : ''}</p>
+            </div>
+            <span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(201,79,79,0.18);color:var(--red-bright);white-space:nowrap">${ev.source === 'sfu_events' ? 'SFU' : ev.source === 'club' ? 'Club' : 'EB'}</span>
+          </div>
+        </div>`;
+      }).join('');
+    })
+    .catch(() => {
+      document.getElementById('homeEventsList').innerHTML =
+        '<div class="card empty-state"><p>Could not load events.</p></div>';
+    });
+});
+</script>
 </body>
 </html>

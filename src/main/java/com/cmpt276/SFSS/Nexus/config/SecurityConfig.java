@@ -15,7 +15,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**",
-                                "/api/weather", "/weather.html")
+                                "/api/weather", "/weather.html",
+                                "/api/events", "/api/events/**",
+                                "/events.html", "/event-detail.html", "/admin-events.html")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
