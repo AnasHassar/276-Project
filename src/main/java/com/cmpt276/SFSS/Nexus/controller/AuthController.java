@@ -26,7 +26,7 @@ public class AuthController {
         }
         if (userService.usernameExists(username)) {
             return "redirect:/register.html?error="
-                    + encode("An account with that email or student ID already exists.");
+                    + encode("An account with that username already exists.");
         }
         userService.registerUser(fullName.trim(), username.trim(), password, "ROLE_USER");
         return "redirect:/login.html?registered";
