@@ -19,7 +19,7 @@
 
                         <div class="mb-3">
                             <label>Associated Club</label>
-                            <select id="clubID" name="" class="form-control" required placeholder="Select a club or organization">
+                            <select id="organizer" name="organizer" class="form-control" required placeholder="Select a club or organization">
                                 <option value="club-1">Placeholder Choice 1</option>
                                 <option value="club-2">Placeholder Choice 2</option>
                                 <option value="club-3">Placeholder Choice 3</option>
@@ -30,7 +30,7 @@
 
                         <div class="mb-3">
                             <label>Event Category</label>
-                            <select id="categoryID" name="" class="form-control" required placeholder="Select a category">
+                            <select id="tags" name="tags" class="form-control" required placeholder="Select a category">
                                 <option value="cat-1">Placeholder Choice 1</option>
                                 <option value="cat-2">Placeholder Choice 2</option>
                                 <option value="cat-3">Placeholder Choice 3</option>
@@ -46,27 +46,27 @@
 
                         <div class="mb-3">
                             <label>Capacity</label>
-                            <input type="number" id="capacity" name="capacity" class="form-control" min="1" required placeholder="e.g. 150">
+                            <input type="number" id="attendeeCount" name="attendeeCount" class="form-control" min="1" required placeholder="e.g. 150">
                         </div>
 
                         <div class="mb-3">
                             <label>Start Time</label>
-                            <input type="date" id="startTime" name="startTime" class="form-control" required placeholder="yyyy-mm-dd">
+                            <input type="datetime-local" id="startDate" name="startDate" class="form-control" required placeholder="yyyy-mm-dd">
                         </div>
 
                         <div class="mb-3">
                             <label>End Time</label>
-                            <input type="date" id="endTime" name="endTime" class="form-control" required placeholder="yyyy-mm-dd">
+                            <input type="datetime-local" id="endDate" name="endDate" class="form-control" required placeholder="yyyy-mm-dd">
                         </div>
 
                         <div class="mb-3">
                             <label>Detailed description</label>
-                            <input id="comment" name="comment" class="form-control" maxlength="1000" placeholder="Provide details about your event..."></input>
+                            <input id="description" name="description" class="form-control" maxlength="1000" placeholder="Provide details about your event..."></input>
                         </div>
 
                         <div class="mb-3">
                             <label>Additional Links (Optional)</label>
-                            <input type="url" id="knowledgeableScore" name="knowledgeableScore" class="form-control" placeholder="">
+                            <input type="url" id="url" name="url" class="form-control" placeholder="">
                         </div>
 
                         <div class="d-grid gap-2">
