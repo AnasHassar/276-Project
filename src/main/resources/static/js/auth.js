@@ -24,4 +24,5 @@ document.addEventListener('DOMContentLoaded', () => {
     messageEl.textContent = 'You have been logged out.';
     messageEl.className = 'auth-message auth-message-success';
   }
+  
 });
