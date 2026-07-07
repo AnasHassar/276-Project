@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFSS Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- css order matters here, don't swap these two -->
+<link rel="stylesheet" href="css/weather.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+<header class="site-header">
+  <span class="site-logo">SFSS Nexus</span>
+  <nav class="site-nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="events.html">Events</a>
+    <a href="clubs.html">Clubs</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+  </nav>
+</header>
+
+<main class="page">
+
+  <div class="page-top">
+    <h1>Welcome<span id="userName"></span></h1>
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+      </svg>
+      <input type="text" placeholder="Search services, events...">
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <div class="cell cell-weather">
+      <div class="weather-widget">
+        <div class="campus">SFU BURNABY</div>
+
+        <div class="main-row">
+          <div class="temp" id="temp">-</div>
+          <div class="icon-area">
+            <img class="icon" id="icon" src="" alt="Weather">
+            <div class="condition" id="condition">Loading...</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Feels like</div>
+            <div class="value" id="feelsLike">-</div>
+          </div>
+          <div class="stat">
+            <div class="label">Humidity</div>
+            <div class="value" id="humidity">-</div>
+          </div>
+          <div class="stat">
+            <div class="label">Wind</div>
+            <div class="value" id="wind">-</div>
+          </div>
+          <div class="stat">
+            <div class="label">Rain</div>
+            <div class="value" id="rain">-</div>
+          </div>
+        </div>
+
+        <div class="credit">Weather data by Open-Meteo.com, Animated Icons by amCharts.com</div>
+      </div>
+    </div>
+
+    <div class="cell cell-translink">
+      <section class="card translink-card">
+        <span class="card-icon">🚌</span>
+        <div class="card-text">
+          <h3>Translink Bus</h3>
+          <p>Real-time bus schedules</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="cell cell-events">
+      <a href="events.html" class="card mini-card">
+        <span class="card-icon">🎉</span>
+        <h3>Events</h3>
+        <p>Find upcoming events</p>
+      </a>
+    </div>
+
+    <div class="cell cell-clubs">
+      <a href="clubs.html" class="card mini-card">
+        <span class="card-icon">👥</span>
+        <h3>Clubs</h3>
+        <p>Join a student club</p>
+      </a>
+    </div>
+
+    <div class="cell cell-upcoming">
+      <section class="upcoming">
+        <h2>Upcoming Events</h2>
+        <div class="card empty-state">
+          <p>No events loaded yet — this connects once the events feature is live.</p>
+        </div>
+      </section>
+  <!-- upcoming events -->
+  <section class="upcoming">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h2 style="margin:0">Upcoming Events</h2>
+      <a href="events.html" style="color:var(--red-bright);font-size:0.78rem;font-weight:600;text-decoration:none">See all →</a>
+    </div>
+    <div id="homeEventsList">
+      <div class="skeleton" style="height:120px"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/weather.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/events?')
+    .then(r => r.json())
+    .then(events => {
+      const container = document.getElementById('homeEventsList');
+      if (!events.length) {
+        container.innerHTML = '<div class="card empty-state"><p>No upcoming events right now.</p></div>';
+        return;
+      }
+      container.innerHTML = events.slice(0, 3).map(ev => {
+        const d = ev.startDate ? new Date(ev.startDate) : null;
+        const dateStr = d ? d.toLocaleDateString('en-CA', {month:'short',day:'numeric'}) : 'TBA';
+        const timeStr = d ? d.toLocaleTimeString('en-CA', {hour:'numeric',minute:'2-digit'}) : '';
+        return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="location.href='event-detail.html?id=${ev.id}'">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+            <div style="flex:1">
+              <p style="margin:0 0 4px;font-weight:700;font-size:0.92rem">${ev.title}</p>
+              <p style="margin:0;color:var(--text-muted);font-size:0.78rem">${dateStr}${timeStr ? ' · '+timeStr : ''}${ev.location ? ' · '+ev.location : ''}</p>
+            </div>
+            <span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(201,79,79,0.18);color:var(--red-bright);white-space:nowrap">${ev.source === 'sfu_events' ? 'SFU' : ev.source === 'club' ? 'Club' : 'EB'}</span>
+          </div>
+        </div>`;
+      }).join('');
+    })
+    .catch(() => {
+      document.getElementById('homeEventsList').innerHTML =
+        '<div class="card empty-state"><p>Could not load events.</p></div>';
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — SFSS Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <span class="site-logo">SFSS Nexus</span>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="clubs.html">Clubs</a>
+    <a href="login.html" class="active">Login</a>
+    <a href="register.html">Register</a>
+  </nav>
+</header>
+
+<div class="auth-page">
+
+  <div class="auth-brand">
+    <span class="brand-name">Nexus</span>
+    <p>Welcome back! Please enter your details to sign in.</p>
+  </div>
+
+  <p id="authMessage" class="auth-message"></p>
+
+  <form class="card auth-form" method="post" action="/login">
+    <input type="hidden" name="_csrf" id="csrfToken" value="">
+    <label>username
+      <input type="text" name="username" placeholder="Enter your username" required>
+    </label>
+    <label>Password
+      <input type="password" name="password" placeholder="Enter your password" required>
+    </label>
+    <button type="submit" class="btn-details" style="margin-top:8px;">Login</button>
+  </form>
+
+  <a href="login.html?role=exec" class="exec-link">Login as an Executive</a>
+
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>
