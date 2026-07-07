@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SfuEventsService {
@@ -58,6 +59,25 @@ public class SfuEventsService {
                 .defaultHeader("Accept", "application/json")
                 .build();
         this.objectMapper = new ObjectMapper();
+    }
+
+    public void cleanupDuplicates() {
+        log.info("Cleaning up duplicate events in database");
+        List<Event> all = eventRepository.findAll();
+        Map<String, List<Event>> grouped = all.stream()
+                .collect(Collectors.groupingBy(e -> e.getSource() + "::" + e.getExternalId()));
+
+        int removed = 0;
+        for (List<Event> group : grouped.values()) {
+            if (group.size() > 1) {
+                group.sort((a, b) -> b.getUpdatedAt().compareTo(a.getUpdatedAt()));
+                for (int i = 1; i < group.size(); i++) {
+                    eventRepository.delete(group.get(i));
+                    removed++;
+                }
+            }
+        }
+        log.info("Removed {} duplicate events", removed);
     }
 
     public void fetchAndUpsert() {
