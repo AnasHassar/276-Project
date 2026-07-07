@@ -107,6 +107,23 @@ a { text-decoration: none; color: inherit; }
   margin-top: 16px;
 }
 
+.auth-message {
+  display: none;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.auth-message:not(:empty) { display: block; }
+.auth-message-error {
+  background: rgba(201,79,79,0.15);
+  color: var(--red-bright);
+}
+.auth-message-success {
+  background: rgba(74,127,193,0.15);
+  color: var(--blue);
+}
+
 /* events/clubs pages */
 .events-list { margin-bottom: 16px; }
 
