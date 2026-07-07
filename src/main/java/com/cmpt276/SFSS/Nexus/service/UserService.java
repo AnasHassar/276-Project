@@ -29,8 +29,9 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void registerUser(String username, String rawPassword, String role) {
+    public void registerUser(String fullName, String username, String rawPassword, String role) {
         User user = new User();
+        user.setFullName(fullName);
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
@@ -39,5 +40,9 @@ public class UserService implements UserDetailsService {
 
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public java.util.Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

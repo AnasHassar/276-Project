@@ -11,11 +11,15 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SfuEventsService {
@@ -35,7 +39,13 @@ public class SfuEventsService {
     private static final DateTimeFormatter[] DT_FORMATS = {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
+            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"),
+            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"),
+            DateTimeFormatter.ISO_DATE_TIME,
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME
     };
 
     private final EventRepository eventRepository;
@@ -51,6 +61,25 @@ public class SfuEventsService {
         this.objectMapper = new ObjectMapper();
     }
 
+    public void cleanupDuplicates() {
+        log.info("Cleaning up duplicate events in database");
+        List<Event> all = eventRepository.findAll();
+        Map<String, List<Event>> grouped = all.stream()
+                .collect(Collectors.groupingBy(e -> e.getSource() + "::" + e.getExternalId()));
+
+        int removed = 0;
+        for (List<Event> group : grouped.values()) {
+            if (group.size() > 1) {
+                group.sort((a, b) -> b.getUpdatedAt().compareTo(a.getUpdatedAt()));
+                for (int i = 1; i < group.size(); i++) {
+                    eventRepository.delete(group.get(i));
+                    removed++;
+                }
+            }
+        }
+        log.info("Removed {} duplicate events", removed);
+    }
+
     public void fetchAndUpsert() {
         log.info("Starting SFU Events fetch");
         List<Event> allEvents = new ArrayList<>();
@@ -60,8 +89,13 @@ public class SfuEventsService {
             allEvents.addAll(fetchFromPath(tag));
         }
 
-        int upserted = 0;
+        Map<String, Event> dedupedMap = new LinkedHashMap<>();
         for (Event e : allEvents) {
+            dedupedMap.putIfAbsent(e.getExternalId(), e);
+        }
+
+        int upserted = 0;
+        for (Event e : dedupedMap.values()) {
             try {
                 upsertEvent(e);
                 upserted++;
@@ -153,9 +187,13 @@ public class SfuEventsService {
 
     private LocalDateTime parseDateTime(String text) {
         if (text == null || text.isBlank()) return null;
+        String t = text.trim();
         for (DateTimeFormatter fmt : DT_FORMATS) {
             try {
-                return LocalDateTime.parse(text.trim(), fmt);
+                return LocalDateTime.parse(t, fmt);
+            } catch (DateTimeParseException ignored) {}
+            try {
+                return ZonedDateTime.parse(t, fmt).toLocalDateTime();
             } catch (DateTimeParseException ignored) {}
         }
         return null;
