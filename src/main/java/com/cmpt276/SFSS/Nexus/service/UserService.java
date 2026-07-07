@@ -41,4 +41,8 @@ public class UserService implements UserDetailsService {
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
+
+    public java.util.Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

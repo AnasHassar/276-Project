@@ -15,8 +15,16 @@
   <header class="app-header">
     <a href="index.html" class="back-link" aria-label="Back to home">←</a>
     <h1>Post Club Event</h1>
-    <span style="width:40px"></span>
+    <a href="#" id="logoutLink" style="font-size:0.8rem;color:var(--red-bright);text-decoration:none;white-space:nowrap">Logout</a>
+    <form id="logoutForm" method="post" action="/logout" style="display:none">
+      <input type="hidden" name="_csrf" id="csrfToken" value="">
+    </form>
   </header>
+
+  <nav class="admin-nav">
+    <a href="admin-users.html">Users</a>
+    <a href="admin-events.html" class="active">Post Event</a>
+  </nav>
 
   <div class="card admin-form-page">
     <h2>New Club Event</h2>
@@ -88,7 +96,13 @@
 
 </div>
 
+<script src="js/auth.js"></script>
 <script>
+document.getElementById('logoutLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('logoutForm').submit();
+});
+
 document.getElementById('eventForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = document.getElementById('formMsg');
@@ -110,7 +124,7 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
   try {
     const res = await fetch('/api/admin/events', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfCookie() || '' },
       body: JSON.stringify(body)
     });
     if (!res.ok) {
