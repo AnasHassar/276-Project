@@ -48,9 +48,12 @@ a { text-decoration: none; color: inherit; }
   color: var(--gold);
   font-weight: 600;
 }
-.site-nav { display: flex; gap: 28px; flex-wrap: wrap; }
+.site-nav { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
 .site-nav a { color: var(--text-muted); font-size: 0.92rem; }
 .site-nav a:hover, .site-nav a.active { color: var(--text-primary); }
+#authLinks { display: contents; }
+.nav-user { color: var(--text-muted); font-size: 0.92rem; }
+#authLinks #logoutLink { color: var(--red-bright); }
 
 /* page container */
 .page {
@@ -105,6 +108,23 @@ a { text-decoration: none; color: inherit; }
   text-align: center;
   display: block;
   margin-top: 16px;
+}
+
+.auth-message {
+  display: none;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.auth-message:not(:empty) { display: block; }
+.auth-message-error {
+  background: rgba(201,79,79,0.15);
+  color: var(--red-bright);
+}
+.auth-message-success {
+  background: rgba(74,127,193,0.15);
+  color: var(--blue);
 }
 
 /* events/clubs pages */

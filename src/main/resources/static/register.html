@@ -15,8 +15,10 @@
     <a href="index.html">Home</a>
     <a href="events.html">Events</a>
     <a href="clubs.html">Clubs</a>
-    <a href="login.html">Login</a>
-    <a href="register.html" class="active">Register</a>
+    <span id="authLinks">
+      <a href="login.html">Login</a>
+      <a href="register.html" class="active">Register</a>
+    </span>
   </nav>
 </header>
 
@@ -27,16 +29,21 @@
     <p>Create your account to get started.</p>
   </div>
 
-  <!-- TODO: hook this up to real registration -->
-  <form class="card auth-form">
+  <p id="authMessage" class="auth-message"></p>
+
+  <form class="card auth-form" method="post" action="/register">
+    <input type="hidden" name="_csrf" id="csrfToken" value="">
     <label>Full Name
-      <input type="text" placeholder="Enter your full name">
+      <input type="text" name="fullName" placeholder="Enter your full name" required>
     </label>
-    <label>Email or Student ID
-      <input type="text" placeholder="Enter your email or student ID">
+    <label>Username
+      <input type="text" name="username" placeholder="Enter your Username" required>
     </label>
     <label>Password
-      <input type="password" placeholder="Create a password">
+      <input type="password" name="password" placeholder="Create a password" required>
+    </label>
+    <label>Executive Access Code <span style="color:var(--text-faint);font-weight:400">(optional — club execs only)</span>
+      <input type="text" name="execCode" placeholder="Leave blank if you're a student">
     </label>
     <button type="submit" class="btn-details" style="margin-top:8px;">Create Account</button>
   </form>
@@ -45,5 +52,7 @@
 
 </div>
 
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
 </body>
 </html>

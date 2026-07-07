@@ -271,6 +271,23 @@
   font-weight: 700;
   margin: 0 0 18px;
 }
+
+.admin-nav {
+  display: flex;
+  gap: 20px;
+  padding: 4px 4px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.admin-nav a {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding-bottom: 8px;
+}
+.admin-nav a.active, .admin-nav a:hover { color: var(--red-bright); }
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -295,6 +312,33 @@
 .form-group textarea { resize: vertical; min-height: 80px; }
 .form-group input:focus,
 .form-group textarea:focus { border-color: rgba(201,79,79,0.5); }
+
+.admin-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.admin-users-table th, .admin-users-table td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-users-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.role-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.role-badge.role-admin { background: rgba(201,79,79,0.18); color: var(--red-bright); }
+.role-badge.role-user { background: rgba(74,127,193,0.18); color: var(--blue); }
+
 .btn-submit {
   width: 100%;
   background: var(--red-bright);

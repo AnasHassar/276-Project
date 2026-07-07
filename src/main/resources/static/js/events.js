@@ -91,36 +91,46 @@ function renderEvents(events) {
   list.innerHTML = events.map(buildCard).join('');
 }
 
+function deduplicateEvents(events) {
+  const seen = new Set();
+  return events.filter(ev => {
+    const key = ev.externalId
+      ? `${ev.source || 'club'}-${ev.externalId}`
+      : `${ev.source || 'club'}-${ev.title || ''}-${ev.location || ''}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function applyFiltersAndSort() {
-  let filtered = allEvents.filter(ev => {
+  let filtered = deduplicateEvents(allEvents).filter(ev => {
     if (currentSource && ev.source !== currentSource) return false;
     return true;
   });
 
   const q = searchInput.value.trim().toLowerCase();
   if (q) {
-    filtered = filtered.filter(ev =>
-      (ev.title || '').toLowerCase().includes(q) ||
-      (ev.description || '').toLowerCase().includes(q)
-    );
+    const terms = q.split(/\s+/).filter(t => t.length > 0);
+    filtered = filtered.filter(ev => {
+      const text = [
+        ev.title, ev.description, ev.location, ev.tags, ev.organizer
+      ].filter(Boolean).join(' ').toLowerCase();
+      return terms.every(term => text.includes(term));
+    });
   }
 
   if (currentSort === 'latest') {
-    filtered.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+    filtered.sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0));
   } else {
-    filtered.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    filtered.sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0));
   }
 
   renderEvents(filtered);
 }
 
 function loadEvents() {
-  const params = new URLSearchParams();
-  if (currentSource) params.set('source', currentSource);
-  const q = searchInput.value.trim();
-  if (q) params.set('q', q);
-
-  fetch('/api/events?' + params.toString())
+  fetch('/api/events')
     .then(r => r.json())
     .then(data => {
       allEvents = data;

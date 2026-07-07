@@ -38,6 +38,11 @@ public class EventScheduler {
     @Scheduled(initialDelay = 5_000, fixedDelay = Long.MAX_VALUE)
     public void runOnStartup() {
         log.info("Running initial event ingestion on startup");
+        try {
+            sfuEventsService.cleanupDuplicates();
+        } catch (Exception e) {
+            log.error("Duplicate cleanup failed: {}", e.getMessage());
+        }
         runHourly();
     }
 }

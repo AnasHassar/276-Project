@@ -15,8 +15,10 @@
     <a href="index.html">Home</a>
     <a href="events.html">Events</a>
     <a href="clubs.html">Clubs</a>
-    <a href="login.html" class="active">Login</a>
-    <a href="register.html">Register</a>
+    <span id="authLinks">
+      <a href="login.html" class="active">Login</a>
+      <a href="register.html">Register</a>
+    </span>
   </nav>
 </header>
 
@@ -27,15 +29,16 @@
     <p>Welcome back! Please enter your details to sign in.</p>
   </div>
 
-  <!-- TODO: hook this up to real login, redirect by role after -->
-  <form class="card auth-form">
-    <label>Email or Student ID
-      <input type="text" placeholder="Enter your email or student ID">
+  <p id="authMessage" class="auth-message"></p>
+
+  <form class="card auth-form" method="post" action="/login">
+    <input type="hidden" name="_csrf" id="csrfToken" value="">
+    <label>username
+      <input type="text" name="username" placeholder="Enter your username" required>
     </label>
     <label>Password
-      <input type="password" placeholder="Enter your password">
+      <input type="password" name="password" placeholder="Enter your password" required>
     </label>
-    <a href="#" class="forgot-link">Forgot Password?</a>
     <button type="submit" class="btn-details" style="margin-top:8px;">Login</button>
   </form>
 
@@ -43,5 +46,7 @@
 
 </div>
 
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
 </body>
 </html>
