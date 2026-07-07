@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Users</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="app-header">
+    <a href="index.html" class="back-link" aria-label="Back to home">←</a>
+    <h1>Users</h1>
+    <a href="#" id="logoutLink" style="font-size:0.8rem;color:var(--red-bright);text-decoration:none;white-space:nowrap">Logout</a>
+    <form id="logoutForm" method="post" action="/logout" style="display:none">
+      <input type="hidden" name="_csrf" id="csrfToken" value="">
+    </form>
+  </header>
+
+  <nav class="admin-nav">
+    <a href="admin-users.html" class="active">Users</a>
+    <a href="admin-events.html">Post Event</a>
+  </nav>
+
+  <div class="card admin-form-page">
+    <h2 style="margin:0 0 18px">All Registered Users</h2>
+
+    <div id="usersContent">
+      <div class="skeleton" style="height:120px"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+document.getElementById('logoutLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('logoutForm').submit();
+});
+
+function escapeHtml(value) {
+  const div = document.createElement('div');
+  div.textContent = value == null ? '' : String(value);
+  return div.innerHTML;
+}
+
+fetch('/api/admin/users', { headers: { Accept: 'application/json' } })
+  .then(res => {
+    if (!res.ok) throw new Error('Failed to load users');
+    return res.json();
+  })
+  .then(users => {
+    const container = document.getElementById('usersContent');
+    if (!users.length) {
+      container.innerHTML = '<p style="color:var(--text-muted);margin:0">No users registered yet.</p>';
+      return;
+    }
+    container.innerHTML = `
+      <table class="admin-users-table">
+        <thead>
+          <tr><th>Name</th><th>Username</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          ${users.map(u => `
+            <tr>
+              <td>${escapeHtml(u.fullName)}</td>
+              <td>${escapeHtml(u.username)}</td>
+              <td><span class="role-badge ${u.role === 'ROLE_ADMIN' ? 'role-admin' : 'role-user'}">${u.role === 'ROLE_ADMIN' ? 'Executive' : 'Student'}</span></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  })
+  .catch(() => {
+    document.getElementById('usersContent').innerHTML =
+      '<p style="color:var(--red-bright);margin:0">Could not load users.</p>';
+  });
+</script>
+</body>
+</html>
