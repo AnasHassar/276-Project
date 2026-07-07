@@ -83,11 +83,6 @@ public class EventController {
                 } catch (Exception ignored) {}
             }
 
-            predicates.add(cb.or(
-                    root.get("startDate").isNull(),
-                    cb.greaterThanOrEqualTo(root.get("startDate"), LocalDateTime.now().minusDays(1))
-            ));
-
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
