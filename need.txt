@@ -1,3 +1,0 @@
-- Rewire the UI 
-- After login redirection should be to index.html
-- Fix deployment issues 
