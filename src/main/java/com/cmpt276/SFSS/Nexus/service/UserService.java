@@ -29,8 +29,9 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void registerUser(String username, String rawPassword, String role) {
+    public void registerUser(String fullName, String username, String rawPassword, String role) {
         User user = new User();
+        user.setFullName(fullName);
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
