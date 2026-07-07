@@ -14,12 +14,12 @@
                     <form action="/addevent" method="post">
                         <div class="mb-3">
                             <label>Event Name</label>
-                            <input type="text" id="name" name="name" class="form-control form-control" placeholder="Name" required>
+                            <input type="text" id="title" name="title" class="form-control form-control" placeholder="Name" required>
                         </div>
 
                         <div class="mb-3">
                             <label>Associated Club</label>
-                            <select id="clubID" name="" class="form-control" required placeholder="Select a club or organization">
+                            <select id="organizer" name="organizer" class="form-control" required placeholder="Select a club or organization">
                                 <option value="club-1">Placeholder Choice 1</option>
                                 <option value="club-2">Placeholder Choice 2</option>
                                 <option value="club-3">Placeholder Choice 3</option>
@@ -30,7 +30,7 @@
 
                         <div class="mb-3">
                             <label>Event Category</label>
-                            <select id="categoryID" name="" class="form-control" required placeholder="Select a category">
+                            <select id="tags" name="tags" class="form-control" required placeholder="Select a category">
                                 <option value="cat-1">Placeholder Choice 1</option>
                                 <option value="cat-2">Placeholder Choice 2</option>
                                 <option value="cat-3">Placeholder Choice 3</option>
@@ -51,12 +51,12 @@
 
                         <div class="mb-3">
                             <label>Start Time</label>
-                            <input type="date" id="startTime" name="startTime" class="form-control" required placeholder="yyyy-mm-dd">
+                            <input type="datetime-local" id="startTime" name="startTime" class="form-control" required placeholder="yyyy-mm-dd">
                         </div>
 
                         <div class="mb-3">
                             <label>End Time</label>
-                            <input type="date" id="endTime" name="endTime" class="form-control" required placeholder="yyyy-mm-dd">
+                            <input type="datetime-local" id="endTime" name="endTime" class="form-control" required placeholder="yyyy-mm-dd">
                         </div>
 
                         <div class="mb-3">
@@ -66,7 +66,7 @@
 
                         <div class="mb-3">
                             <label>Additional Links (Optional)</label>
-                            <input type="url" id="knowledgeableScore" name="knowledgeableScore" class="form-control" placeholder="">
+                            <input type="url" id="url" name="knowledgeableScore" class="form-control" placeholder="">
                         </div>
 
                         <div class="d-grid gap-2">
