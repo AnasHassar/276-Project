@@ -22,6 +22,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminUserController.class)
@@ -79,8 +80,9 @@ class AdminUserControllerTest {
     }
 
     @Test
-    void getAllUsers_whenNotAuthenticated_isUnauthorized() throws Exception {
+    void getAllUsers_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(get("/api/admin/users"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login.html"));
     }
 }

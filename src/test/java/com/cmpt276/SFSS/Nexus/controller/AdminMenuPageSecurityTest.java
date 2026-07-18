@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminUserController.class)
@@ -59,8 +60,9 @@ class AdminMenuPageSecurityTest {
     }
 
     @Test
-    void adminMenuPage_whenNotAuthenticated_isUnauthorized() throws Exception {
+    void adminMenuPage_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(get("/admin-menu.html"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login.html"));
     }
 }
