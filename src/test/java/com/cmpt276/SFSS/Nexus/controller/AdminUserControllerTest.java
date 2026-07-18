@@ -1,6 +1,7 @@
 package com.cmpt276.SFSS.Nexus.controller;
 
 import com.cmpt276.SFSS.Nexus.config.PasswordConfig;
+import com.cmpt276.SFSS.Nexus.config.RoleBasedAuthSuccessHandler;
 import com.cmpt276.SFSS.Nexus.config.SecurityConfig;
 import com.cmpt276.SFSS.Nexus.model.User;
 import com.cmpt276.SFSS.Nexus.repository.UserRepository;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminUserController.class)
-@Import({ SecurityConfig.class, PasswordConfig.class })
+@Import({ SecurityConfig.class, PasswordConfig.class, RoleBasedAuthSuccessHandler.class })
 class AdminUserControllerTest {
 
     // Spring Boot 4.1's @WebMvcTest does not auto-apply Spring Security's MockMvc
