@@ -24,7 +24,7 @@ public class RoleBasedAuthSuccessHandler implements AuthenticationSuccessHandler
                 .anyMatch(a -> a.equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            response.sendRedirect("/admin-users.html");
+            response.sendRedirect("/admin-menu.html");
         } else {
             response.sendRedirect("/");
         }
