@@ -3,7 +3,6 @@ package com.cmpt276.SFSS.Nexus.controller;
 import com.cmpt276.SFSS.Nexus.config.PasswordConfig;
 import com.cmpt276.SFSS.Nexus.config.RoleBasedAuthSuccessHandler;
 import com.cmpt276.SFSS.Nexus.config.SecurityConfig;
-import com.cmpt276.SFSS.Nexus.model.User;
 import com.cmpt276.SFSS.Nexus.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +16,15 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminUserController.class)
 @Import({ SecurityConfig.class, PasswordConfig.class, RoleBasedAuthSuccessHandler.class })
-class AdminUserControllerTest {
+class AdminMenuPageSecurityTest {
 
     // Spring Boot 4.1's @WebMvcTest does not auto-apply Spring Security's MockMvc
     // test support, so it must be wired in explicitly for @WithMockUser to work.
@@ -45,43 +42,26 @@ class AdminUserControllerTest {
     @MockitoBean
     private UserRepository userRepository;
 
-    private User user(Long id, String username, String fullName, String role) {
-        User u = new User();
-        u.setId(id);
-        u.setUsername(username);
-        u.setFullName(fullName);
-        u.setPassword("$2a$10$shouldneverbeexposedhash");
-        u.setRole(role);
-        return u;
-    }
-
     @Test
     @WithMockUser(username = "exec@sfu.ca", roles = "ADMIN")
-    void getAllUsers_asAdmin_returnsUserSummariesWithoutPasswords() throws Exception {
-        when(userRepository.findAll()).thenReturn(List.of(
-                user(1L, "student@sfu.ca", "Student Person", "ROLE_USER"),
-                user(2L, "exec@sfu.ca", "Exec Person", "ROLE_ADMIN")));
-
-        mockMvc.perform(get("/api/admin/users"))
+    void adminMenuPage_asAdmin_isServed() throws Exception {
+        mockMvc.perform(get("/admin-menu.html"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].username").value("student@sfu.ca"))
-                .andExpect(jsonPath("$[0].fullName").value("Student Person"))
-                .andExpect(jsonPath("$[0].role").value("ROLE_USER"))
-                .andExpect(jsonPath("$[0].password").doesNotExist())
-                .andExpect(jsonPath("$[1].role").value("ROLE_ADMIN"));
+                .andExpect(content().string(containsString("Registered Users")))
+                .andExpect(content().string(containsString("Add Events")))
+                .andExpect(content().string(containsString("Add Clubs")));
     }
 
     @Test
     @WithMockUser(username = "student@sfu.ca", roles = "USER")
-    void getAllUsers_asRegularUser_isForbidden() throws Exception {
-        mockMvc.perform(get("/api/admin/users"))
+    void adminMenuPage_asRegularUser_isForbidden() throws Exception {
+        mockMvc.perform(get("/admin-menu.html"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void getAllUsers_whenNotAuthenticated_redirectsToLogin() throws Exception {
-        mockMvc.perform(get("/api/admin/users"))
+    void adminMenuPage_whenNotAuthenticated_redirectsToLogin() throws Exception {
+        mockMvc.perform(get("/admin-menu.html"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login.html"));
     }

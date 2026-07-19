@@ -13,19 +13,18 @@
 <div class="app">
 
   <header class="app-header">
-    <a href="index.html" class="back-link" aria-label="Back to home">←</a>
-    <h1>Users</h1>
+<a href="admin-menu.html" class="back-link" aria-label="Back to admin menu">←</a>    <h1>Users</h1>
     <a href="#" id="logoutLink" style="font-size:0.8rem;color:var(--red-bright);text-decoration:none;white-space:nowrap">Logout</a>
     <form id="logoutForm" method="post" action="/logout" style="display:none">
       <input type="hidden" name="_csrf" id="csrfToken" value="">
     </form>
   </header>
 
-  <nav class="admin-nav">
+<nav class="admin-nav">
+    <a href="admin-menu.html">Menu</a>
     <a href="admin-users.html" class="active">Users</a>
     <a href="admin-events.html">Post Event</a>
   </nav>
-
   <div class="card admin-form-page">
     <h2 style="margin:0 0 18px">All Registered Users</h2>
 

@@ -29,6 +29,7 @@ public class SecurityConfig {
                                                                 "/events.html", "/event-detail.html")
                                                 .permitAll()
                                                 .requestMatchers("/admin/**", "/admin-events.html", "/admin-users.html",
+                                                                "/admin-menu.html", "/admin-clubs.html",
                                                                 "/api/admin/**")
                                                 .hasRole("ADMIN")
                                                 .anyRequest().authenticated())
