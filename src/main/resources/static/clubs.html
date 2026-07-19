@@ -6,11 +6,12 @@
 <title>Clubs — SFSS Nexus</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/clubs.css">
 </head>
 <body>
 
 <header class="site-header">
-  <a href="index.html" span class="site-logo">SFSS Nexus</span>
+  <a href="index.html" class="site-logo">SFSS Nexus</a>
   <nav class="site-nav">
     <a href="index.html">Home</a>
     <a href="events.html">Events</a>
@@ -30,21 +31,30 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
       </svg>
-      <input type="text" placeholder="Search clubs (e.g. 'tech')">
+      <input type="text" id="clubSearch" placeholder="Search clubs (e.g. 'tech')">
     </div>
   </div>
 
-  <!-- TODO: hook up real clubs list here if it's in scope this iteration -->
-  <section class="events-list">
+  <div class="filters-container">
+    <button class="filter-btn active" data-category="All">All</button>
+    <button class="filter-btn" data-category="Academic">Academic</button>
+    <button class="filter-btn" data-category="Creative">Creative</button>
+    <button class="filter-btn" data-category="Adventure">Adventure</button>
+    <button class="filter-btn" data-category="Sports">Sports</button>
+    <button class="filter-btn" data-category="Cultural">Cultural</button>
+    <button class="filter-btn" data-category="Professional">Professional</button>
+    <button class="filter-btn" data-category="Social">Social</button>
+  </div>
+
+  <section id="clubsList" class="clubs-grid">
     <div class="card">
-      <p style="color: var(--text-muted); margin:0;">
-        Clubs directory not built yet for this iteration.
-      </p>
+      <p style="color: var(--text-muted); margin:0;">Loading clubs…</p>
     </div>
   </section>
 
 </main>
 
 <script src="js/main.js"></script>
+<script src="js/clubs.js"></script>
 </body>
 </html>

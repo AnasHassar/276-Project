@@ -19,14 +19,17 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf
                                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                                                .ignoringRequestMatchers("/api/admin/**"))
                                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/login.html", "/register", "/register.html",
                                                                 "/css/**", "/js/**", "/images/**",
                                                                 "/api/weather", "/weather.html",
                                                                 "/api/events", "/api/events/**",
-                                                                "/events.html", "/event-detail.html")
+                                                                "/events.html", "/event-detail.html",
+                                                                "/api/clubs", "/api/clubs/**",
+                                                                "/clubs.html")
                                                 .permitAll()
                                                 .requestMatchers("/admin/**", "/admin-events.html", "/admin-users.html",
                                                                 "/admin-menu.html", "/admin-clubs.html",
