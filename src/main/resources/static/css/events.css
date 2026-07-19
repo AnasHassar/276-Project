@@ -339,6 +339,20 @@
 }
 .role-badge.role-admin { background: rgba(201,79,79,0.18); color: var(--red-bright); }
 .role-badge.role-user { background: rgba(74,127,193,0.18); color: var(--blue); }
+.club-actions { text-align: right; white-space: nowrap; }
+.btn-link {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--blue);
+  padding: 4px 6px;
+}
+.btn-link:hover { text-decoration: underline; }
+.btn-link-danger { color: var(--red-bright); }
+
 
 .btn-submit {
   width: 100%;
