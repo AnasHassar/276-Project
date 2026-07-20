@@ -28,9 +28,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.cmpt276.SFSS.Nexus.config.PasswordConfig;
+import com.cmpt276.SFSS.Nexus.config.RoleBasedAuthSuccessHandler;
+import com.cmpt276.SFSS.Nexus.config.SecurityConfig;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest(AuthController.class)
-@Import({ SecurityConfig.class, PasswordConfig.class })
+@Import({ SecurityConfig.class, PasswordConfig.class, RoleBasedAuthSuccessHandler.class })
 class AuthControllerTest {
 
     // Spring Boot 4.1's @WebMvcTest does not auto-apply Spring Security's MockMvc
@@ -171,8 +175,9 @@ class AuthControllerTest {
     }
 
     @Test
-    void me_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void me_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(get("/api/auth/me"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login.html"));
     }
 }
