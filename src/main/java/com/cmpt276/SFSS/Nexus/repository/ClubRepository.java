@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long>, JpaSpecificationExecutor<Club> {
     List<Club> findByActiveTrue();
+
     List<Club> findByCategory(String category);
+
     List<Club> findByNameContainingIgnoreCaseAndActiveTrue(String name);
 }

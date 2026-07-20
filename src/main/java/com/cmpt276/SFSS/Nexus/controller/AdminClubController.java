@@ -82,7 +82,8 @@ public class AdminClubController {
             if (body.containsKey("memberCount")) {
                 try {
                     club.setMemberCount(Integer.parseInt(body.get("memberCount")));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
             if (body.containsKey("active")) {
                 club.setActive(Boolean.parseBoolean(body.get("active")));

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Clubs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="app-header">
+    <a href="admin-menu.html" class="back-link" aria-label="Back to admin menu">←</a>
+    <h1>Clubs</h1>
+    <a href="#" id="logoutLink" style="font-size:0.8rem;color:var(--red-bright);text-decoration:none;white-space:nowrap">Logout</a>
+    <form id="logoutForm" method="post" action="/logout" style="display:none">
+      <input type="hidden" name="_csrf" id="csrfToken" value="">
+    </form>
+  </header>
+
+  <nav class="admin-nav">
+    <a href="admin-menu.html">Menu</a>
+    <a href="admin-users.html">Users</a>
+    <a href="admin-events.html">Post Event</a>
+    <a href="admin-clubs.html" class="active">Add Club</a>
+  </nav>
+
+  <div class="card admin-form-page" style="margin-bottom:16px">
+    <h2 style="margin:0 0 18px">Existing Clubs</h2>
+    <div id="clubsContent">
+      <div class="skeleton" style="height:120px"></div>
+    </div>
+  </div>
+
+  <div class="card admin-form-page">
+    <h2 id="formTitle">New Club</h2>
+    <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 18px">
+      Clubs added here appear across the site wherever clubs are listed.
+    </p>
+
+    <form id="clubForm">
+      <input type="hidden" id="clubId" value="">
+      <div class="form-group">
+        <label for="clubName">Club Name *</label>
+        <input id="clubName" type="text" placeholder="e.g. SFU Coding Club" required>
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input id="category" type="text" placeholder="e.g. Technology, Sports, Arts">
+      </div>
+      <div class="form-group">
+        <label for="clubDescription">Description</label>
+        <textarea id="clubDescription" placeholder="What does this club do?"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="contactEmail">Contact Email</label>
+        <input id="contactEmail" type="email" placeholder="club@sfu.ca">
+      </div>
+      <div class="form-group">
+        <label for="logoUrl">Logo URL (optional)</label>
+        <input id="logoUrl" type="url" placeholder="https://…">
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Add Club</button>
+      <button type="button" class="btn-link" id="cancelEditBtn" style="display:none;width:100%;text-align:center;margin-top:8px">Cancel edit</button>
+      <p class="form-message" id="formMsg"></p>
+    </form>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin-clubs.js"></script>
+</body>
+</html>
