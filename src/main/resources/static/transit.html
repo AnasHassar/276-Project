@@ -7,57 +7,20 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/transit.css">
 </head>
-<body>
+    <body>
+        <div class="transit-widget">
+            <div class="campus">SFU BURNABY</div>
 
-  <div class="transit-widget">
-    <div class="campus">SFU BURNABY</div>
+            <div class="transit-header">
+            <div class="stop-name" id="stopName">SFU Exchange</div>
+            <div class="transit-label">NEXT BUSES</div>
+            </div>
 
-<div class="transit-header">
-  <div class="stop-name" id="stopName">SFU Exchange</div>
-  <div class="transit-label">NEXT BUSES</div>
-</div>
+            <div class="bus-list" id="busList">
+            <div class="loading">Loading...</div>
+            </div>
 
-<div class="bus-list" id="busList">
-  <div class="loading">Loading...</div>
-</div>
-
-<div class="credit">Transit data by Transitland</div>
-
-  </div>
-
-  <script>
-    async function loadTransit() {
-      try {
-        const response = await fetch("/api/transit");
-        const data = await response.json();
-
-        document.getElementById("stopName").textContent = data.stop;
-
-        const busList = document.getElementById("busList");
-        busList.innerHTML = "";
-
-        data.buses.forEach(bus => {
-          const busRow = document.createElement("div");
-          busRow.className = "bus-row";
-
-          busRow.innerHTML = `
-            <div class="route">${bus.route}</div>
-            <div class="destination">${bus.destination}</div>
-            <div class="minutes">${bus.minutes} min</div>
-          `;
-
-          busList.appendChild(busRow);
-        });
-
-      } catch (error) {
-        document.getElementById("busList").innerHTML =
-          '<div class="loading">Transit information unavailable</div>';
-      }
-    }
-
-    loadTransit();
-    setInterval(loadTransit, 60000);
-  </script>
-
-</body>
+            <div class="credit">Transit data by Transitland</div>
+        </div>
+    </body>
 </html>
