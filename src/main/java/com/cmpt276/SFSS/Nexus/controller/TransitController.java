@@ -21,24 +21,21 @@ import java.util.Map;
 @RestController
 public class TransitController {
     @Value("${TRANSITLAND_API_KEY:}")
-    
+    private String apiKey;
+ 
     //cache so TransitLand isn't called on every page load (rate limit)
     private Map<String, Object> cachedResult = null;
     private long cacheTime = 0;
     private static final long CACHE_MS = 60 * 1000; //reuse for 60 sec
     
-    private String apiKey;
-
     private static final String SFU_STOP_ID = "s-c2b86ghk99-sfutransportationcentre~bay1";
-
-
 
     @GetMapping("/api/transit")
     public Map<String, Object> getTransit() {
         long now = System.currentTimeMillis();
 
         // if fetched recently, reuse instead of calling API again
-        if(cachedResult != null && (now - cacheTime) > CACHE_MS) {
+        if(cachedResult != null && (now - cacheTime) < CACHE_MS) {
             return cachedResult;
         }
 
@@ -92,6 +89,9 @@ public class TransitController {
             Map<String, Object> result = new HashMap<>();
             result.put("stop", "SFU Excahnge");
             result.put("buses", new ArrayList<>());
+
+            cachedResult = result;
+            cacheTime = now;
             return result;
         }
     }
