@@ -55,7 +55,7 @@ public class TransitController {
             Map<String, Object> bus = new HashMap<>();
             bus.put("route", routeNum);
             bus.put("destination", destination);
-            bus.put("minutes", countDown(time));
+            bus.put("minutes", countDown(time, LocalTime.now()));
             buses.add(bus);
             // Only next 5 buses
             if(buses.size() >= 5) {
@@ -70,13 +70,12 @@ public class TransitController {
     }
 
     // turn 24 hour time into count down
-    private int countDown(String clockTime) {
+    int countDown(String clockTime, LocalTime now) {
         LocalTime busTime = LocalTime.parse(clockTime); // parse 24 hour time
-        LocalTime now = LocalTime.now(); // current time
     
         long minutes = Duration.between(now, busTime).toMinutes(); // Difference (in min)
         if (minutes < 0) {
-            minutes = 0; //
+            minutes = 0; //if bus already left, show 0 (instead of negative)
         }
         return (int) minutes;
     }
