@@ -1,7 +1,7 @@
 const SOURCE_READ_MORE = {
-  eventbrite: 'Read more on Eventbrite',
-  sfu_events: 'Read more on SFU Events',
-  club: 'View event details'
+  eventbrite: 'Open this event on Eventbrite',
+  sfu_events: 'Open this event on SFU Events',
+  club: 'Open event link'
 };
 
 function formatDate(iso) {
@@ -77,7 +77,7 @@ function renderDetail(ev) {
 
         <h2>About this Event</h2>
         <p class="about-text">${descriptionText}${ev.description && ev.description.replace(/<[^>]+>/g, '').length > 600 ? '…' : ''}</p>
-        ${ev.url ? `<a class="read-more-link" href="${ev.url}" target="_blank" rel="noopener">${readMoreLabel} ↗</a>` : ''}
+        ${ev.url ? `<a class="read-more-link" href="${ev.url}" target="_blank" rel="noopener noreferrer">${readMoreLabel} ↗</a>` : ''}
       </div>
     </div>`;
 

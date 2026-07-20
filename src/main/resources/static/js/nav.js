@@ -9,9 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(user => {
       if (!user) return; // not logged in — leave the default Login/Register links
 
-      const label = user.isAdmin ? 'Executive' : (user.fullName || user.username);
       authLinks.innerHTML = `
-        <span class="nav-user">Hi, ${label}</span>
         <a href="#" id="logoutLink">Logout</a>
         <form id="logoutForm" method="post" action="/logout" style="display:none">
           <input type="hidden" name="_csrf" id="logoutCsrf">

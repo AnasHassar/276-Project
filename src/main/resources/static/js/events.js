@@ -36,54 +36,62 @@ function truncate(text, max) {
 
 function buildCard(ev) {
   const tags = ev.tags ? ev.tags.split(',').filter(t => t.trim()) : [];
-  const tagHtml = tags.slice(0, 4).map(t =>
-    `<span class="event-card__tag">#${t.trim()}</span>`
+  const tagHtml = tags.slice(0, 2).map(t =>
+    `<span class="event-card__tag">${t.trim()}</span>`
   ).join('');
-
-  const sourceLabel = SOURCE_LABELS[ev.source] || ev.source;
   const dateStr = formatDate(ev.startDate);
   const timeStr = formatTime(ev.startDate);
-
   const heroHtml = ev.imageUrl
     ? `<img class="event-card__hero" src="${ev.imageUrl}" alt="${ev.title}" loading="lazy" onerror="this.style.display='none'">`
-    : `<div class="event-card__hero-placeholder">
-         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5">
-           <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>
-         </svg>
-       </div>`;
-
-  const attendeeHtml = ev.attendeeCount
-    ? `<div class="event-card__meta-row">
-         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M14.5 15.2c2.7.3 4.5 2 4.5 4.8"/></svg>
-         ${ev.attendeeCount} attending
-       </div>`
-    : '';
+    : `<div class="event-card__hero-placeholder"><span aria-hidden="true">✦</span></div>`;
 
   return `
-    <article class="event-card" data-id="${ev.id}">
+    <article class="event-card" data-id="${ev.id}" role="link" tabindex="0" onclick="openEvent('${encodeURIComponent(ev.url || '')}', ${ev.id})" onkeydown="if(event.key === 'Enter' || event.key === ' ') openEvent('${encodeURIComponent(ev.url || '')}', ${ev.id})">
       ${heroHtml}
       <div class="event-card__body">
-        <span class="event-card__source-badge ${ev.source}">${sourceLabel}</span>
+        <div class="event-card__date">${dateStr}${timeStr ? ' · ' + timeStr : ''}</div>
         <h2 class="event-card__title">${ev.title}</h2>
-        <div class="event-card__meta">
-          <div class="event-card__meta-row">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
-            ${dateStr}${timeStr ? ' · ' + timeStr : ''}
-          </div>
-          ${ev.location ? `<div class="event-card__meta-row">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            ${ev.location}
-          </div>` : ''}
-          ${attendeeHtml}
-        </div>
-        ${ev.description ? `<p class="event-card__desc">${truncate(ev.description.replace(/<[^>]+>/g, ''), 160)}</p>` : ''}
+        ${ev.location ? `<div class="event-card__location">${ev.location}</div>` : ''}
+        ${ev.description ? `<p class="event-card__desc">${truncate(ev.description.replace(/<[^>]+>/g, ''), 115)}</p>` : ''}
         ${tagHtml ? `<div class="event-card__tags">${tagHtml}</div>` : ''}
-        <button class="event-card__learn-more" onclick="openDetail(${ev.id})">Learn More</button>
+        <span class="event-card__learn-more">Details <span aria-hidden="true">→</span></span>
       </div>
     </article>`;
 }
 
+function renderFeatured(event) {
+  const featured = document.getElementById('featuredEvent');
+  if (!featured) return;
+  if (!event) {
+    featured.classList.remove('has-featured');
+    featured.innerHTML = '';
+    return;
+  }
+  const dateStr = formatDate(event.startDate);
+  const timeStr = formatTime(event.startDate);
+  const image = event.imageUrl
+    ? `<img class="featured-card__image" src="${event.imageUrl}" alt="${event.title}" loading="lazy">`
+    : '<div class="featured-card__image featured-card__image--empty"></div>';
+  featured.classList.add('has-featured');
+  featured.innerHTML = `<article class="featured-card" role="link" tabindex="0" onclick="openEvent('${encodeURIComponent(event.url || '')}', ${event.id})">
+    ${image}
+    <div class="featured-card__body">
+      <span class="featured-card__label">Featured this week</span>
+      <h2 class="featured-card__title">${event.title}</h2>
+      <div class="featured-card__meta">${dateStr}${timeStr ? ' · ' + timeStr : ''}${event.location ? ' · ' + event.location : ''}</div>
+      <span class="featured-card__action">Explore event <span aria-hidden="true">→</span></span>
+    </div>
+  </article>`;
+}
+
 function renderEvents(events) {
+  const resultCount = document.getElementById('resultCount');
+  if (resultCount) resultCount.textContent = `${events.length} events`;
+  const featured = document.getElementById('featuredEvent');
+  if (featured) {
+    featured.classList.remove('has-featured');
+    featured.innerHTML = '';
+  }
   if (!events.length) {
     list.innerHTML = '<p class="events-empty">No events found. Check back later!</p>';
     return;
@@ -91,12 +99,14 @@ function renderEvents(events) {
   list.innerHTML = events.map(buildCard).join('');
 }
 
+function normalizeText(text) {
+  return (text || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
 function deduplicateEvents(events) {
   const seen = new Set();
   return events.filter(ev => {
-    const key = ev.externalId
-      ? `${ev.source || 'club'}-${ev.externalId}`
-      : `${ev.source || 'club'}-${ev.title || ''}-${ev.location || ''}`;
+    const key = `${normalizeText(ev.title)}::${normalizeText(ev.location)}::${normalizeText(ev.startDate)}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -141,8 +151,13 @@ function loadEvents() {
     });
 }
 
-function openDetail(id) {
-  window.location.href = `event-detail.html?id=${id}`;
+function openEvent(encodedUrl, id) {
+  const url = decodeURIComponent(encodedUrl || '');
+  if (/^https?:\/\//i.test(url)) {
+    window.location.href = url;
+    return;
+  }
+  window.location.href = `event-detail.html?id=${encodeURIComponent(id)}`;
 }
 
 searchInput.addEventListener('input', () => {
@@ -165,6 +180,8 @@ sortBtn.addEventListener('click', (e) => {
 document.querySelectorAll('input[name="srcFilter"]').forEach(radio => {
   radio.addEventListener('change', () => {
     currentSource = radio.value;
+    const filterCount = document.getElementById('filterCount');
+    if (filterCount) filterCount.textContent = currentSource ? '(1)' : '';
     filterPanel.classList.remove('open');
     applyFiltersAndSort();
   });
