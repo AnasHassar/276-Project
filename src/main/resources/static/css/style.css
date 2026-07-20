@@ -12,6 +12,10 @@
   --red: #a13d3d;
   --red-bright: #c94f4f;
   --blue: #4a7fc1;
+  --purple: #9b6ef3;
+  --teal: #3ecfb0;
+  --orange: #ff8a4c;
+  --pink: #f25fa0;
 
   --font-body: 'Inter', sans-serif;
   --radius: 16px;
@@ -137,11 +141,13 @@ a { text-decoration: none; color: inherit; }
   gap: 10px;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
+  border-radius: 999px;
+  padding: 12px 18px;
   margin-bottom: 18px;
   color: var(--text-muted);
+  transition: border-color 0.15s ease;
 }
+.search-bar:focus-within { border-color: var(--gold); }
 .search-bar input {
   background: none;
   border: none;
