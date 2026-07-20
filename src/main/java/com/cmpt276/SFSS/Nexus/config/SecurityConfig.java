@@ -26,7 +26,9 @@ public class SecurityConfig {
                                                                 "/css/**", "/js/**", "/images/**",
                                                                 "/api/weather", "/weather.html",
                                                                 "/api/events", "/api/events/**",
-                                                                "/events.html", "/event-detail.html")
+                                                                "/events.html", "/event-detail.html",
+                                                                "/api/clubs", "/api/clubs/**",
+                                                                "/clubs.html")
                                                 .permitAll()
                                                 .requestMatchers("/admin/**", "/admin-events.html", "/admin-users.html",
                                                                 "/admin-menu.html", "/admin-clubs.html",

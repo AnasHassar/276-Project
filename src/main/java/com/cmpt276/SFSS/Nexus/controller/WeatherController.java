@@ -97,7 +97,7 @@ public class WeatherController {
         }
     }
 
-    private String describeWeather(String owmMain) {
+    String describeWeather(String owmMain) {
         if (owmMain == null) {
             return "Clear";
         }

@@ -1,0 +1,72 @@
+.campus {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #8a93a8;
+  margin-bottom: 8px;
+}
+
+.transit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stop-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.transit-label {
+  font-size: 10px;
+  color: #8a93a8;
+  letter-spacing: 1px;
+}
+
+.bus-list {
+  border-top: 1px solid #2c364d;
+}
+
+.bus-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #2c364d;
+}
+
+.route {
+  font-size: 16px;
+  font-weight: bold;
+  width: 45px;
+}
+
+.destination {
+  font-size: 13px;
+  color: #cfd6e4;
+  flex: 1;
+}
+
+.minutes {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.loading {
+  color: #8a93a8;
+  font-size: 13px;
+  padding: 14px 0;
+  text-align: center;
+}
+
+.credit {
+  font-size: 10px;
+  color: #5a6479;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.translink-card {
+  border: none;
+  box-shadow: none;
+}

@@ -32,27 +32,68 @@ public class AdminClubController {
 
         Club club = new Club();
         club.setName(name.trim());
-        club.setCategory(body.getOrDefault("category", ""));
         club.setDescription(body.getOrDefault("description", ""));
-        club.setContactEmail(body.getOrDefault("contactEmail", ""));
+        club.setCategory(body.getOrDefault("category", ""));
+        club.setImageUrl(body.getOrDefault("imageUrl", ""));
         club.setLogoUrl(body.getOrDefault("logoUrl", ""));
+        club.setContactEmail(body.getOrDefault("contactEmail", ""));
+        club.setWebsite(body.getOrDefault("website", ""));
+        club.setLocation(body.getOrDefault("location", ""));
+        club.setTags(body.getOrDefault("tags", ""));
+        club.setActive(true);
+
+        try {
+            club.setMemberCount(Integer.parseInt(body.getOrDefault("memberCount", "0")));
+        } catch (NumberFormatException ignored) {
+            club.setMemberCount(0);
+        }
 
         return ResponseEntity.ok(clubRepository.save(club));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateClub(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        String name = body.get("name");
-        if (name == null || name.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "name is required"));
-        }
-
         return clubRepository.findById(id).map(club -> {
-            club.setName(name.trim());
-            club.setCategory(body.getOrDefault("category", ""));
-            club.setDescription(body.getOrDefault("description", ""));
-            club.setContactEmail(body.getOrDefault("contactEmail", ""));
-            club.setLogoUrl(body.getOrDefault("logoUrl", ""));
+            if (body.containsKey("name")) {
+                String name = body.get("name");
+                if (name == null || name.isBlank()) {
+                    return ResponseEntity.badRequest().body(Map.of("error", "name is required"));
+                }
+                club.setName(name.trim());
+            }
+            if (body.containsKey("description")) {
+                club.setDescription(body.get("description"));
+            }
+            if (body.containsKey("category")) {
+                club.setCategory(body.get("category"));
+            }
+            if (body.containsKey("imageUrl")) {
+                club.setImageUrl(body.get("imageUrl"));
+            }
+            if (body.containsKey("logoUrl")) {
+                club.setLogoUrl(body.get("logoUrl"));
+            }
+            if (body.containsKey("contactEmail")) {
+                club.setContactEmail(body.get("contactEmail"));
+            }
+            if (body.containsKey("website")) {
+                club.setWebsite(body.get("website"));
+            }
+            if (body.containsKey("location")) {
+                club.setLocation(body.get("location"));
+            }
+            if (body.containsKey("tags")) {
+                club.setTags(body.get("tags"));
+            }
+            if (body.containsKey("memberCount")) {
+                try {
+                    club.setMemberCount(Integer.parseInt(body.get("memberCount")));
+                } catch (NumberFormatException ignored) {}
+            }
+            if (body.containsKey("active")) {
+                club.setActive(Boolean.parseBoolean(body.get("active")));
+            }
+
             return ResponseEntity.ok(clubRepository.save(club));
         }).orElse(ResponseEntity.notFound().build());
     }
