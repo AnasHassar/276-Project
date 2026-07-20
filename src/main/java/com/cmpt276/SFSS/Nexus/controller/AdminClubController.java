@@ -33,8 +33,9 @@ public class AdminClubController {
         Club club = new Club();
         club.setName(name.trim());
         club.setDescription(body.getOrDefault("description", ""));
-        club.setCategory(body.getOrDefault("category", "Social"));
+        club.setCategory(body.getOrDefault("category", ""));
         club.setImageUrl(body.getOrDefault("imageUrl", ""));
+        club.setLogoUrl(body.getOrDefault("logoUrl", ""));
         club.setContactEmail(body.getOrDefault("contactEmail", ""));
         club.setWebsite(body.getOrDefault("website", ""));
         club.setLocation(body.getOrDefault("location", ""));
@@ -42,21 +43,23 @@ public class AdminClubController {
         club.setActive(true);
 
         try {
-            Integer memberCount = Integer.parseInt(body.getOrDefault("memberCount", "0"));
-            club.setMemberCount(memberCount);
+            club.setMemberCount(Integer.parseInt(body.getOrDefault("memberCount", "0")));
         } catch (NumberFormatException ignored) {
             club.setMemberCount(0);
         }
 
-        Club saved = clubRepository.save(club);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(clubRepository.save(club));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateClub(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return clubRepository.findById(id).map(club -> {
             if (body.containsKey("name")) {
-                club.setName(body.get("name"));
+                String name = body.get("name");
+                if (name == null || name.isBlank()) {
+                    return ResponseEntity.badRequest().body(Map.of("error", "name is required"));
+                }
+                club.setName(name.trim());
             }
             if (body.containsKey("description")) {
                 club.setDescription(body.get("description"));
@@ -66,6 +69,9 @@ public class AdminClubController {
             }
             if (body.containsKey("imageUrl")) {
                 club.setImageUrl(body.get("imageUrl"));
+            }
+            if (body.containsKey("logoUrl")) {
+                club.setLogoUrl(body.get("logoUrl"));
             }
             if (body.containsKey("contactEmail")) {
                 club.setContactEmail(body.get("contactEmail"));
@@ -88,8 +94,7 @@ public class AdminClubController {
                 club.setActive(Boolean.parseBoolean(body.get("active")));
             }
 
-            Club updated = clubRepository.save(club);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(clubRepository.save(club));
         }).orElse(ResponseEntity.notFound().build());
     }
 

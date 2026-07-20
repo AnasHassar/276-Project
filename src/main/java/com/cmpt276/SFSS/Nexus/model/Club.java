@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "clubs")
 public class Club {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,10 +20,13 @@ public class Club {
     @Column(length = 500)
     private String imageUrl;
 
+    @Column(name = "logo_url", length = 500)
+    private String logoUrl;
+
     @Column(length = 300)
     private String category;
 
-    @Column(length = 500)
+    @Column(name = "contact_email", length = 500)
     private String contactEmail;
 
     @Column(length = 500)
@@ -58,12 +62,15 @@ public class Club {
     }
 
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getLogoUrl() { return logoUrl; }
+    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
     public String getContactEmail() { return contactEmail; }

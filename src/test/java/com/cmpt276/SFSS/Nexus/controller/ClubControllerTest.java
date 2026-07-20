@@ -16,6 +16,7 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +57,7 @@ class ClubControllerTest {
 
     @Test
     void getClubs_returnsActiveClubs() throws Exception {
-        when(clubRepository.findByActiveTrue()).thenReturn(List.of(sampleClub()));
+        when(clubRepository.findByActiveTrue()).thenReturn(new ArrayList<>(List.of(sampleClub())));
 
         mockMvc.perform(get("/api/clubs"))
                 .andExpect(status().isOk())
@@ -66,7 +67,7 @@ class ClubControllerTest {
 
     @Test
     void getClubs_withSearchQuery_filtersByName() throws Exception {
-        when(clubRepository.findByActiveTrue()).thenReturn(List.of(sampleClub()));
+        when(clubRepository.findByActiveTrue()).thenReturn(new ArrayList<>(List.of(sampleClub())));
 
         mockMvc.perform(get("/api/clubs").param("q", "coding"))
                 .andExpect(status().isOk())
@@ -75,7 +76,7 @@ class ClubControllerTest {
 
     @Test
     void getClubs_withNonMatchingSearch_returnsEmptyList() throws Exception {
-        when(clubRepository.findByActiveTrue()).thenReturn(List.of(sampleClub()));
+        when(clubRepository.findByActiveTrue()).thenReturn(new ArrayList<>(List.of(sampleClub())));
 
         mockMvc.perform(get("/api/clubs").param("q", "zzz-no-match"))
                 .andExpect(status().isOk())
@@ -84,7 +85,7 @@ class ClubControllerTest {
 
     @Test
     void getClubs_withCategoryFilter_filtersByCategory() throws Exception {
-        when(clubRepository.findByActiveTrue()).thenReturn(List.of(sampleClub()));
+        when(clubRepository.findByActiveTrue()).thenReturn(new ArrayList<>(List.of(sampleClub())));
 
         mockMvc.perform(get("/api/clubs").param("category", "Sports"))
                 .andExpect(status().isOk())

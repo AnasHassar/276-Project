@@ -19,8 +19,7 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf
                                                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                                                .ignoringRequestMatchers("/api/admin/**"))
+                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/login.html", "/register", "/register.html",
