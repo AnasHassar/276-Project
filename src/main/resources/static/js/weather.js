@@ -12,6 +12,17 @@ const icons = {
 
 fetch('/api/weather').then(response=>response.json()).then(data=> {
 
+    if (data.error || data.temperature === undefined) {
+        document.getElementById('temp').textContent = "-";
+        document.getElementById('condition').textContent = "Weather unavailable";
+        document.getElementById('feelsLike').textContent = "-";
+        document.getElementById('humidity').textContent = "-";
+        document.getElementById('wind').textContent = "-";
+        document.getElementById('rain').textContent = "-";
+        return;
+    } 
+
+
     document.getElementById('temp').textContent = Math.round(data.temperature) + "°C";
 
     document.getElementById('condition').textContent = data.condition;
