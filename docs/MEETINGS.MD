@@ -25,7 +25,7 @@
 - Manish - event page (displaying events)
 - Christopher - create-event form (admin-only)
 
-## Meeting 2 — July 6, 2026 (progress and review)
+## Meeting 2 - July 6, 2026 (progress and review)
 
 **Participants:** Anas Hassar, Salman Hashir, Maaz Anwar, Manish Madishetty, Christopher Le
 
@@ -44,3 +44,27 @@
 - Salman — change the landing page to a web/desktop layout
 - Team — fill in sections of the requirements document as each feature is finished
 - Record a short screencast once the full iteration is working
+
+## SFSS Nexus - Iteration 2 Meeting Notes
+## Meeting 1 - July 17, 2026 (Iteration 2 planning)
+
+**Participants:** Anas Hassar, Salman Hashir, Maaz Anwar, Manish Madishetty, Christopher Le
+
+**Work Assignments for Iteration 2:**
+- Better UI/UX - Manish
+- Translink feature - Christopher & Maaz
+- Fix weather API - Maaz
+- Fix landing page widgets - Salman
+- Club page - Salman
+- Club section on the admin dashboard (club CRUD) - Anas
+- Admin menu on login (see users, add events, add clubs) - Anas
+
+Decisions: 
+- Documentation and screencast can be done Monday, but all code must be
+  finalized by Sunday, per the instructor's email.
+- Requires writing tests and test user stories.
+- All work goes through pull requests, and PRs must be reviewed and/or commented before merging.
+
+## Progress notes - July 18, 2026
+- Decided the TransLink GTFS API doesn't return usable JSON, so the transit
+  feature will use the Transitland API instead.
