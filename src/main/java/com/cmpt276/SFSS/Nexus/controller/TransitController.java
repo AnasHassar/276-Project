@@ -70,8 +70,8 @@ public class TransitController {
                 bus.put("destination", destination);
                 bus.put("minutes", countDown(time, LocalTime.now()));
                 buses.add(bus);
-                // Only next 5 buses
-                if(buses.size() >= 5) {
+                // Only next 10 buses
+                if(buses.size() >= 10) {
                     break;
                 }
             }

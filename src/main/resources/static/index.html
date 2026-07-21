@@ -12,10 +12,10 @@
 <link rel="stylesheet" href="css/transit.css">
 <link rel="stylesheet" href="css/events.css">
 </head>
-<body>
+<body class="home-page">
 
 <header class="site-header">
-  <a href="index.html" span class="site-logo">SFSS Nexus</span>
+  <a href="index.html" class="site-logo"><img src="images/nexuslogo.png" alt="SFSS Nexus" class="site-logo__img"></a>
   <nav class="site-nav">
     <a href="index.html" class="active">Home</a>
     <a href="events.html">Events</a>
@@ -45,6 +45,7 @@
   <div class="dashboard-grid">
 
     <div class="cell cell-weather">
+      <div class="flip-card-glow flip-card-glow--static">
       <div class="weather-widget">
         <div class="campus">SFU BURNABY</div>
 
@@ -77,9 +78,11 @@
 
         <div class="credit">Weather data by OpenWeatherMap, Icons by amCharts</div>
       </div>
+      </div>
     </div>
 
   <div class="cell cell-translink">
+    <div class="flip-card-glow flip-card-glow--static">
     <section class="card translink-card">
       <div class="transit-widget">
 
@@ -98,42 +101,49 @@
 
       </div>
     </section>
+    </div>
   </div>
 
     <div class="cell cell-events">
-      <a href="events.html" class="card mini-card">
-        <span class="card-icon">🎉</span>
-        <h3>Events</h3>
-        <p>Find upcoming events</p>
-      </a>
+      <div class="flip-card-glow">
+        <a href="events.html" class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="images/events.png" alt="Events" class="flip-card-img flip-card-img--lg">
+              <div class="flip-card-front-text">
+                <h3>Events</h3>
+                <p>Explore all the events happening and stay in the loop</p>
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>Events at SFU</h3>
+              <p>SFU features a vibrant campus life with diverse year-round events including career fairs, cultural festivals, academic seminars, and major campus traditions. Students can discover upcoming activities, register for workshops, and track involvement through the central SFU Events Calendar.</p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
     <div class="cell cell-clubs">
-      <a href="clubs.html" class="card mini-card">
-        <span class="card-icon">👥</span>
-        <h3>Clubs</h3>
-        <p>Join a student club</p>
-      </a>
+      <div class="flip-card-glow">
+        <a href="clubs.html" class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="images/clubs.png" alt="Clubs" class="flip-card-img">
+              <div class="flip-card-front-text">
+                <h3>Clubs</h3>
+                <p>Join a student club based on your interests</p>
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>Clubs at SFU</h3>
+              <p>SFU offers over 100 student-run clubs covering academics, tech teams, culture, and hobbies managed by the Simon Fraser Student Society. You can explore and join them online via the SFSS Portal or meet them in person during Clubs Days at the start of each semester.</p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
-    <!-- <div class="cell cell-upcoming">
-      <section class="upcoming">
-        <h2>Upcoming Events</h2>
-        <div class="card empty-state">
-          <p>No events loaded yet — this connects once the events feature is live.</p>
-        </div>
-      </section>
-  <!-- upcoming events -->
-  <section class="upcoming">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <h2 style="margin:0">Upcoming Events</h2>
-      <a href="events.html" style="color:var(--red-bright);font-size:0.78rem;font-weight:600;text-decoration:none">See all →</a>
-    </div>
-    <div id="homeEventsList">
-      <div class="skeleton" style="height:120px"></div>
-    </div>
-
-  </div> 
 
 </main>
 
@@ -151,35 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
     pageMsg.textContent = "You don't have access to that page.";
     pageMsg.className = 'auth-message auth-message-error';
   }
-
-  fetch('/api/events?')
-    .then(r => r.json())
-    .then(events => {
-      const container = document.getElementById('homeEventsList');
-      if (!events.length) {
-        container.innerHTML = '<div class="card empty-state"><p>No upcoming events right now.</p></div>';
-        return;
-      }
-      container.innerHTML = events.slice(0, 3).map(ev => {
-        const d = ev.startDate ? new Date(ev.startDate) : null;
-        const dateStr = d ? d.toLocaleDateString('en-CA', {month:'short',day:'numeric'}) : 'TBA';
-        const timeStr = d ? d.toLocaleTimeString('en-CA', {hour:'numeric',minute:'2-digit'}) : '';
-        return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="location.href='event-detail.html?id=${ev.id}'">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-            <div style="flex:1">
-              <p style="margin:0 0 4px;font-weight:700;font-size:0.92rem">${ev.title}</p>
-              <p style="margin:0;color:var(--text-muted);font-size:0.78rem">${dateStr}${timeStr ? ' · '+timeStr : ''}${ev.location ? ' · '+ev.location : ''}</p>
-            </div>
-            <span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(201,79,79,0.18);color:var(--red-bright);white-space:nowrap">${ev.source === 'sfu_events' ? 'SFU' : ev.source === 'club' ? 'Club' : 'EB'}</span>
-          </div>
-        </div>`;
-      }).join('');
-    })
-    .catch(() => {
-      document.getElementById('homeEventsList').innerHTML =
-        '<div class="card empty-state"><p>Could not load events.</p></div>';
-    });
 });
 </script>
+<script src="js/balls.js"></script>
 </body>
 </html>

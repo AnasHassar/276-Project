@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <title>Weather Widget</title>
   <link rel="stylesheet" href="/css/weather.css">
+  <style>
+    .ball {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.3;
+      z-index: -1;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -53,5 +62,6 @@
   </div>
 
   <script src="/js/weather.js"></script>
+  <script src="js/balls.js"></script>
 </body>
 </html>

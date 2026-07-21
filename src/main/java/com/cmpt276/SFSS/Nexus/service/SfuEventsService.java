@@ -65,7 +65,7 @@ public class SfuEventsService {
         log.info("Cleaning up duplicate events in database");
         List<Event> all = eventRepository.findAll();
         Map<String, List<Event>> grouped = all.stream()
-                .collect(Collectors.groupingBy(e -> e.getSource() + "::" + e.getExternalId()));
+                .collect(Collectors.groupingBy(this::duplicateKey));
 
         int removed = 0;
         for (List<Event> group : grouped.values()) {
@@ -80,6 +80,13 @@ public class SfuEventsService {
         log.info("Removed {} duplicate events", removed);
     }
 
+    private String duplicateKey(Event e) {
+        String title = e.getTitle() == null ? "" : e.getTitle().toLowerCase().trim().replaceAll("\\s+", " ");
+        String location = e.getLocation() == null ? "" : e.getLocation().toLowerCase().trim().replaceAll("\\s+", " ");
+        String start = e.getStartDate() == null ? "" : e.getStartDate().toString();
+        return title + "::" + location + "::" + start;
+    }
+
     public void fetchAndUpsert() {
         log.info("Starting SFU Events fetch");
         List<Event> allEvents = new ArrayList<>();
@@ -91,7 +98,7 @@ public class SfuEventsService {
 
         Map<String, Event> dedupedMap = new LinkedHashMap<>();
         for (Event e : allEvents) {
-            dedupedMap.putIfAbsent(e.getExternalId(), e);
+            dedupedMap.putIfAbsent(duplicateKey(e), e);
         }
 
         int upserted = 0;
@@ -103,6 +110,7 @@ public class SfuEventsService {
                 log.warn("Failed to upsert SFU event '{}': {}", e.getTitle(), ex.getMessage());
             }
         }
+        cleanupDuplicates();
         log.info("SFU Events fetch complete — {} events upserted", upserted);
     }
 
@@ -111,6 +119,8 @@ public class SfuEventsService {
         try {
             String json = restClient.get()
                     .uri(path.isBlank() ? "/" : "/" + path)
+                    .header("Cache-Control", "no-cache, no-store")
+                    .header("Pragma", "no-cache")
                     .retrieve()
                     .body(String.class);
 
