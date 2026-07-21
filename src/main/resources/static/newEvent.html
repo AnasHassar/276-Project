@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>Add Event</title>
+    <style>
+      .ball {
+        position: fixed;
+        border-radius: 50%;
+        opacity: 0.3;
+        z-index: -1;
+        pointer-events: none;
+      }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -73,5 +82,6 @@
                             <input class="btn btn-primary" type="submit" value="CREATE EVENT"></input>
                         </div>
                     </form>
+    <script src="js/balls.js"></script>
 </body>
 </html>
