@@ -2,6 +2,7 @@ package com.cmpt276.SFSS.Nexus.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
@@ -22,90 +23,108 @@ import java.util.Map;
 public class TransitController {
     @Value("${TRANSITLAND_API_KEY:}")
     private String apiKey;
- 
-    //cache so TransitLand isn't called on every page load (rate limit)
-    private Map<String, Object> cachedResult = null;
-    private long cacheTime = 0;
-    private static final long CACHE_MS = 60 * 1000; //reuse for 60 sec
-    
+
     private static final String SFU_STOP_ID = "s-c2b86ghk99-sfutransportationcentre~bay1";
-
+    private static final String SURR_STOP_ID = "s-c28xud8vyy-surreycentralstation~platform1";
     @GetMapping("/api/transit")
-    public Map<String, Object> getTransit() {
-        long now = System.currentTimeMillis();
+    public Map<String, Object> getTransit(@RequestParam(defaultValue = "sfu") String stop) {
 
-        // if fetched recently, reuse instead of calling API again
-        if(cachedResult != null && (now - cacheTime) < CACHE_MS) {
-            return cachedResult;
+        String stopId;
+        String stopName;
+
+        if (stop.equalsIgnoreCase("surrey")) {
+            stopId = SURR_STOP_ID;
+            stopName = "Surrey Central";
+        } else {
+            stopId = SFU_STOP_ID;
+            stopName = "SFU Exchange";
         }
 
-        try {
-            String url = "https://transit.land/api/v2/rest/stops/" + SFU_STOP_ID + "/departures?apikey=" + apiKey;
-        
-            RestClient restClient = RestClient.create();
-            Map<String, Object> response = restClient.get().uri(url).retrieve().body(Map.class);
+        String url = "https://transit.land/api/v2/rest/stops/" + stopId + "/departures?apikey=" + apiKey;
 
-            
-            List<Map<String, Object>> buses = new ArrayList<>();
-            
-            //response stops is a list, take first stop
-            List<Map<String, Object>> stops = (List<Map<String,Object>>) response.get("stops");
-            Map<String, Object> stop = stops.get(0);
+        RestClient restClient = RestClient.create();
+        Map<String, Object> response = restClient.get().uri(url).retrieve().body(Map.class);
 
-            // departure list, one entry per upcoming bus
-            List<Map<String, Object>> departures = (List<Map<String, Object>>) stop.get("departures");
-            //go through each departure and pull out relevant info
+        List<Map<String, Object>> stops = (List<Map<String, Object>>) response.get("stops");
+        if (stops.isEmpty()) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("stop", "No transit data found");
+            result.put("buses", new ArrayList<>());
+            return result;
+        }
+
+        Map<String, Object> stopData = stops.get(0);
+        List<Map<String, Object>> departures = (List<Map<String, Object>>) stopData.get("departures");
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("stop", stopName);
+
+        // Surrey Central Station
+        if (stop.equalsIgnoreCase("surrey")) {
+
+            List<Map<String, Object>> trains = new ArrayList<>();
+
             for (Map<String, Object> dep : departures) {
-                //route + destination
                 Map<String, Object> trip = (Map<String, Object>) dep.get("trip");
-                Map<String, Object> route = (Map<String, Object>) trip.get("route");
 
-                String routeNum = (String) route.get("route_short_name"); // "145"
-                String destination = (String) trip.get("trip_headsign"); // "145 Production way Station"
-                String time = (String) dep.get("departure_time"); //time in 24 hour clock
+                String destination = (String) trip.get("trip_headsign");
+                String time = (String) dep.get("departure_time");
 
-                //bus entry and add it to list
-                Map<String, Object> bus = new HashMap<>();
-                bus.put("route", routeNum);
-                bus.put("destination", destination);
-                bus.put("minutes", countDown(time, LocalTime.now()));
-                buses.add(bus);
-                // Only next 10 buses
-                if(buses.size() >= 10) {
+                Map<String, Object> train = new HashMap<>();
+                train.put("destination", destination);
+                train.put("minutes", countDown(time, LocalTime.now()));
+
+                trains.add(train);
+
+                if (trains.size() >= 5) {
                     break;
                 }
             }
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("stop", "SFU Exchange");
-            result.put("buses", buses);
-            return result;
+            result.put("type", "train");
+            result.put("trains", trains);
 
-        } catch (Exception e) {
-            if (cachedResult != null) { //if call fails, reuse the last good result
-                return cachedResult;
+        } else {
+
+            // SFU Exchange
+            List<Map<String, Object>> buses = new ArrayList<>();
+
+            for (Map<String, Object> dep : departures) {
+                Map<String, Object> trip = (Map<String, Object>) dep.get("trip");
+                Map<String, Object> route = (Map<String, Object>) trip.get("route");
+
+                String routeNum = (String) route.get("route_short_name");
+                String destination = (String) trip.get("trip_headsign");
+                String time = (String) dep.get("departure_time");
+
+                Map<String, Object> bus = new HashMap<>();
+                bus.put("route", routeNum);
+                bus.put("destination", destination);
+                bus.put("minutes", countDown(time, LocalTime.now()));
+
+                buses.add(bus);
+
+                if (buses.size() >= 5) {
+                    break;
+                }
             }
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("stop", "SFU Excahnge");
-            result.put("buses", new ArrayList<>());
-
-            cachedResult = result;
-            cacheTime = now;
-            return result;
+            result.put("type", "bus");
+            result.put("buses", buses);
         }
+
+        return result;
     }
 
+    public int countDown(String clockTime, LocalTime now){
+        LocalTime busTime = LocalTime.parse(clockTime);
 
-    
-    // turn 24 hour time into count down
-    int countDown(String clockTime, LocalTime now) {
-        LocalTime busTime = LocalTime.parse(clockTime); // parse 24 hour time
-    
-        long minutes = Duration.between(now, busTime).toMinutes(); // Difference (in min)
+        long minutes = Duration.between(now, busTime).toMinutes();
+
         if (minutes < 0) {
-            minutes = 0; //if bus already left, show 0 (instead of negative)
+            minutes = 0;
         }
+
         return (int) minutes;
     }
 }

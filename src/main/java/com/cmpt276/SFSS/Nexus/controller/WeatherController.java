@@ -2,6 +2,7 @@ package com.cmpt276.SFSS.Nexus.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import java.util.HashMap;
@@ -18,23 +19,43 @@ public class WeatherController {
     private static final double LATITUDE = 49.246445;
     private static final double LONGITUDE = -122.994560;
 
-    // cache
-    private Map<String, Object> cachedResult = null; 
-    private long cacheTime = 0;     
+    //Surrey Central Coords
+    private static final double SURR_LATITUDE = 49.18951;
+    private static final double SURR_LONGITUDE = -122.84788;
+
+        // cache
+        // private Map<String, Object> cachedResult = null; 
+        // private long cacheTime = 0;     
+
+        private Map<String, Map<String, Object>> cachedResults = new HashMap<>();
+        private Map<String, Long> cacheTimes = new HashMap<>();
+
     private static final long CACHE_MS = 15 * 60 * 1000; // reuse for 15 min
 
     @GetMapping("/api/weather")
-    public Map<String, Object> getWeather() {
+    public Map<String, Object> getWeather(@RequestParam(defaultValue = "sfu") String location) {
 
          long now = System.currentTimeMillis();
 
-         if (cachedResult != null && (now - cacheTime) < CACHE_MS) {
-         }   
+        //  if (cachedResult != null && (now - cacheTime) < CACHE_MS) {
+        //  }   
+
+        if (cachedResults.containsKey(location) && (now - cacheTimes.get(location)) < CACHE_MS) {
+            return cachedResults.get(location);
+        }
 
          try {
+            double latitude = LATITUDE;
+            double longitude = LONGITUDE;
+
+            if (location.equalsIgnoreCase("surrey")) {
+                latitude = SURR_LATITUDE;
+                longitude = SURR_LONGITUDE;
+            }
+
             String url = "https://api.openweathermap.org/data/2.5/forecast"
-                    + "?lat=" + LATITUDE
-                    + "&lon=" + LONGITUDE
+                    + "?lat=" + latitude
+                    + "&lon=" + longitude
                     + "&appid=" + apiKey
                     + "&units=metric"
                     + "&cnt=1";
@@ -84,13 +105,20 @@ public class WeatherController {
         result.put("rainChance", rainChance);
         result.put("condition", describeWeather(owmCondition));
         
-        cachedResult = result; //save to cache
+        // cachedResult = result; //save to cache
+        // return result;
+
+        cachedResults.put(location, result);
+        cacheTimes.put(location, now);
+
         return result;
         
     }   catch (Exception e) {
-        if (cachedResult != null) {
-                return cachedResult;
-            }
+         e.printStackTrace();
+
+        if (cachedResults.containsKey(location)) {
+            return cachedResults.get(location);
+        }
             Map<String, Object> result = new HashMap<>();
             result.put("error", "unavailable");
             return result;

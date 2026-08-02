@@ -49,3 +49,35 @@ body {
   margin-top: 12px;
   text-align: center;
 }
+
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.weather-tabs {
+    display: flex;
+    gap: 6px;
+}
+
+.weather-tab {
+    border: 1px solid var(--border);
+    background: var(--card-bg-2);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.weather-tab:hover {
+    color: var(--text-primary);
+}
+
+.weather-tab.active {
+    background: var(--accent);
+    color: white;
+}
