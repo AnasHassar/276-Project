@@ -12,4 +12,5 @@ public interface ClubRepository extends JpaRepository<Club, Long>, JpaSpecificat
     List<Club> findByActiveTrue();
     List<Club> findByCategory(String category);
     List<Club> findByNameContainingIgnoreCaseAndActiveTrue(String name);
+    boolean existsByNameIgnoreCase(String name);
 }

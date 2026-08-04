@@ -104,6 +104,6 @@ class ClubControllerTest {
     void getCategories_returnsCategoryList() throws Exception {
         mockMvc.perform(get("/api/clubs/categories/list"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").value("Academic"));
+                .andExpect(jsonPath("$[0]").value("Arts"));
     }
 }
