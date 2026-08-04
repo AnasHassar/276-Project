@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Finder — SFSS Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/events.css">
+<style>
+  .roomfinder-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100vh - 160px);
+  }
+  .roomfinder-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 18px rgba(43,38,28,0.12);
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-logo"><img src="images/nexuslogo.png" alt="SFSS Nexus" class="site-logo__img"></a>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="clubs.html">Clubs</a>
+    <a href="class-calendar.html">Classes</a>
+    <a href="roomfinder.html" class="active">Room Finder</a>
+    <span id="authLinks">
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </span>
+  </nav>
+</header>
+
+<main class="page">
+
+  <header class="app-header">
+    <a href="index.html" class="back-link" aria-label="Back to home">←</a>
+    <div>
+      <p class="eyebrow">SFU campus life</p>
+      <h1>Room Finder</h1>
+    </div>
+  </header>
+
+  <div class="roomfinder-wrap">
+    <iframe class="roomfinder-frame" src="https://roomfinder.sfu.ca/apps/sfuroomfinder_web/" title="SFU Room Finder" allow="geolocation"></iframe>
+  </div>
+
+</main>
+
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/balls.js"></script>
+</body>
+</html>

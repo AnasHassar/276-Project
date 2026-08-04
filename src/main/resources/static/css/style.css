@@ -212,24 +212,28 @@ a { text-decoration: none; color: inherit; }
 
 .class-calendar-cta {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
   transition: transform 0.15s ease;
 }
 .class-calendar-cta:hover { transform: translateY(-2px); }
 .class-calendar-cta .card-icon {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 0;
 }
 .class-calendar-cta__body h3 {
   margin: 0 0 4px;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 .class-calendar-cta__body p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   line-height: 1.45;
 }
 
@@ -257,10 +261,10 @@ a { text-decoration: none; color: inherit; }
 /* dashboard grid layout (web, not mobile stack) */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-areas:
-    "weather weather translink"
-    "events clubs translink";
+    "weather weather calendar translink"
+    "events clubs map translink";
   gap: 20px;
 }
 .cell { display: flex; }
@@ -269,6 +273,8 @@ a { text-decoration: none; color: inherit; }
 .cell-translink { grid-area: translink; }
 .cell-events { grid-area: events; }
 .cell-clubs { grid-area: clubs; }
+.cell-map { grid-area: map; }
+.cell-calendar { grid-area: calendar; }
 .cell-upcoming { grid-area: upcoming; }
 
 /* flip cards for Events/Clubs */
@@ -373,18 +379,18 @@ a { text-decoration: none; color: inherit; }
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  padding: 32px 28px;
+  gap: 10px;
+  padding: 22px 22px;
   text-align: center;
 }
 .flip-card-back h3 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.15rem;
 }
 .flip-card-back p {
   margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: 0.86rem;
+  line-height: 1.45;
   color: rgba(255,255,255,0.95);
 }
 
@@ -458,9 +464,11 @@ a { text-decoration: none; color: inherit; }
     grid-template-columns: 1fr;
     grid-template-areas:
       "weather"
+      "calendar"
       "translink"
       "events"
       "clubs"
+      "map"
       "upcoming";
   }
   .site-header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
