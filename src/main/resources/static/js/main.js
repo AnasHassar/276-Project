@@ -13,3 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(() => {});
 });
+
+// Dashboard search
+// pressing Enter searches events
+document.addEventListener('DOMContentLoaded', () => {
+  const dashboardSearch = document.getElementById('dashboardSearch');
+  if (!dashboardSearch) return;
+  dashboardSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = dashboardSearch.value.trim();
+      if (q) window.location.href = 'events.html?search=' + encodeURIComponent(q);
+    }
+  });
+});

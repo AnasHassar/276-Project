@@ -40,7 +40,12 @@
       <input type="text" name="username" placeholder="Enter your Username" required>
     </label>
     <label>Password
-      <input type="password" name="password" placeholder="Create a password" required>
+      <span style="position:relative; display:block; width:100%;">
+        <input type="password" name="password" id="registerPassword" placeholder="Create a password" required
+          style="width:100%; box-sizing:border-box; padding-right:64px;">
+        <button type="button" onclick="togglePassword('registerPassword', this)"
+          style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--red-bright); cursor:pointer; font-size:0.85rem; font-weight:600; z-index:2;">Show</button>
+      </span>
     </label>
     <label>Executive Access Code <span style="color:var(--text-faint);font-weight:400">(optional — club execs only)</span>
       <input type="text" name="execCode" placeholder="Leave blank if you're a student">
