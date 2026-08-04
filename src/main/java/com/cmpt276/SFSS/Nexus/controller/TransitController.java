@@ -11,10 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @RestController
 public class TransitController {
@@ -23,6 +21,7 @@ public class TransitController {
 
     private static final String SFU_STOP_ID = "s-c2b86ghk99-sfutransportationcentre~bay1";
     private static final String SURR_STOP_ID = "s-c28xud8vyy-surreycentralstation~platform1";
+
     @GetMapping("/api/transit")
     public Map<String, Object> getTransit(@RequestParam(defaultValue = "sfu") String stop) {
         String stopId;
@@ -65,8 +64,6 @@ public class TransitController {
 
                 String destination = (String) trip.get("trip_headsign");
                 String time = (String) dep.get("departure_time");
-                System.out.println("TRAIN API TIME: " + time);
-                System.out.println("TRAIN MINUTES: " + countDown(time));
 
                 Map<String, Object> train = new HashMap<>();
                 train.put("destination", destination);
@@ -82,7 +79,7 @@ public class TransitController {
             result.put("type", "train");
             result.put("trains", trains);
         } else {
-            //SFU Exchange
+            // SFU Exchange
             List<Map<String, Object>> buses = new ArrayList<>();
 
             for (Map<String, Object> dep : departures) {
@@ -114,28 +111,27 @@ public class TransitController {
     }
 
     public int countDown(String time) {
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Vancouver"));
+        // Always resolve "now" in the stop's own timezone, not the server's (Render
+        // runs in UTC).
+        LocalTime now = LocalTime.now(ZoneId.of("America/Vancouver"));
+        return countDown(time, now);
+    }
 
+    public int countDown(String time, LocalTime now) {
         String[] splitTime = time.split(":");
 
         int hour = Integer.parseInt(splitTime[0]);
         int minute = Integer.parseInt(splitTime[1]);
         int second = Integer.parseInt(splitTime[2]);
 
-        ZonedDateTime departure = now
-                .withHour(hour % 24)
-                .withMinute(minute)
-                .withSecond(second)
-                .withNano(0);
+        // GTFS allows hour >= 24 for trips past midnight, so compare using raw
+        // seconds-of-day
+        // instead of ZonedDateTime, which would otherwise wrap the hour and misplace
+        // the date.
+        long departureSeconds = (hour * 3600L) + (minute * 60L) + second;
+        long nowSeconds = now.toSecondOfDay();
 
-        if (hour >= 24) {
-            departure = departure.plusDays(hour / 24);
-        }
-
-        if (departure.isBefore(now)) {
-            departure = departure.plusDays(1);
-        }
-
-        return (int) Math.ceil(Duration.between(now, departure).toSeconds() / 60.0);
+        long minutes = (long) Math.ceil((departureSeconds - nowSeconds) / 60.0);
+        return (int) Math.max(minutes, 0);
     }
 }
