@@ -65,6 +65,8 @@ public class TransitController {
 
                 String destination = (String) trip.get("trip_headsign");
                 String time = (String) dep.get("departure_time");
+                System.out.println("TRAIN API TIME: " + time);
+                System.out.println("TRAIN MINUTES: " + countDown(time));
 
                 Map<String, Object> train = new HashMap<>();
                 train.put("destination", destination);
@@ -120,14 +122,20 @@ public class TransitController {
         int minute = Integer.parseInt(splitTime[1]);
         int second = Integer.parseInt(splitTime[2]);
 
-        ZonedDateTime departure = now.withHour(hour % 24).withMinute(minute).withSecond(second).withNano(0);
+        ZonedDateTime departure = now
+                .withHour(hour % 24)
+                .withMinute(minute)
+                .withSecond(second)
+                .withNano(0);
 
         if (hour >= 24) {
+            departure = departure.plusDays(hour / 24);
+        }
+
+        if (departure.isBefore(now)) {
             departure = departure.plusDays(1);
         }
 
-        long minutes = Duration.between(now, departure).toMinutes();
-
-        return Math.max((int) minutes, 0);
+        return (int) Math.ceil(Duration.between(now, departure).toSeconds() / 60.0);
     }
 }
