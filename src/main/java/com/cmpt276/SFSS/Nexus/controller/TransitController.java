@@ -117,7 +117,6 @@ public class TransitController {
                 .now(ZoneId.of("America/Vancouver"))
                 .toLocalTime();
 
-        // Handle TransitLand times like 24:02:51
         int hour = Integer.parseInt(time.substring(0, 2));
 
         if (hour >= 24) {
