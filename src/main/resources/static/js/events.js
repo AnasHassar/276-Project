@@ -10,11 +10,19 @@ let currentSource = '';
 let searchTimer = null;
 
 const list = document.getElementById('eventsList');
+
 const searchInput = document.getElementById('searchInput');
+const preset = new URLSearchParams(window.location.search).get('search');
+if (preset && searchInput) searchInput.value = preset;
+
 const filterBtn = document.getElementById('filterBtn');
+
 const filterPanel = document.getElementById('filterPanel');
+
 const sortBtn = document.getElementById('sortBtn');
+
 const sortPanel = document.getElementById('sortPanel');
+
 const sortLabel = document.getElementById('sortLabel');
 
 function formatDate(iso) {
