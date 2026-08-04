@@ -5,7 +5,6 @@ import com.cmpt276.SFSS.Nexus.repository.ClubRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,9 +51,6 @@ public class ClubController {
 
     @GetMapping("/categories/list")
     public ResponseEntity<List<String>> getCategories() {
-        return ResponseEntity.ok(Arrays.asList(
-                "Academic", "Creative", "Adventure", "Sports",
-                "Cultural", "Professional", "Social"
-        ));
+        return ResponseEntity.ok(com.cmpt276.SFSS.Nexus.config.ClubDataSeeder.CATEGORIES);
     }
 }
