@@ -112,17 +112,27 @@ public class TransitController {
     }
 
     public int countDown(String time){
-        LocalTime busTime = LocalTime.parse(time);
 
-        //Force Render to use PST over UTC 
-        LocalTime now = ZonedDateTime.now(ZoneId.of("America/Vancouver")).toLocalTime();
+        LocalTime now = ZonedDateTime
+                .now(ZoneId.of("America/Vancouver"))
+                .toLocalTime();
+
+        // Handle TransitLand times like 24:02:51
+        int hour = Integer.parseInt(time.substring(0, 2));
+
+        if (hour >= 24) {
+            hour -= 24;
+            LocalTime busTime = LocalTime.parse(String.format("%02d%s", hour, time.substring(2)));
+
+            long minutes = Duration.between(now, busTime).toMinutes();
+            minutes += 24 * 60;
+            return (int) minutes;
+        }
+
+        LocalTime busTime = LocalTime.parse(time);
 
         long minutes = Duration.between(now, busTime).toMinutes();
 
-        if (minutes < 0) {
-            minutes = 0;
-        }
-
-        return (int) minutes;
+        return Math.max((int) minutes, 0);
     }
 }
