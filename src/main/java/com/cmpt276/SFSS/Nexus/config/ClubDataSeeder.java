@@ -13,8 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Seeds the clubs table with real SFSS club data on first startup (only runs
- * if the table is empty, so it never overwrites admin edits).
+ * Seeds the clubs table with real SFSS club data on every startup.
+ *
+ * Checks each club by name before inserting it — if a club with that exact
+ * name already exists (whether from a previous run of this seeder, or added
+ * manually by someone through the admin panel, e.g. test clubs), it's left
+ * completely untouched. Only clubs that are genuinely missing get added.
+ * This makes it safe to restart/redeploy repeatedly without ever creating
+ * duplicates or wiping out manual entries.
  *
  * Source: go.sfss.ca/clubs/list (public SFSS club directory). There's no
  * public JSON API for this data, so it was pulled from the rendered page
@@ -93,16 +99,18 @@ public class ClubDataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (clubRepository.count() > 0) {
-            return; // already has data (seeded before, or admin-entered) — don't touch it
-        }
-
         try (InputStream in = new ClassPathResource("data/clubs-seed.json").getInputStream()) {
             List<Map<String, String>> raw = objectMapper.readValue(in, List.class);
             int saved = 0;
+            int skipped = 0;
             for (Map<String, String> entry : raw) {
+                String name = entry.get("name");
+                if (clubRepository.existsByNameIgnoreCase(name)) {
+                    skipped++; // already there (e.g. seeded before, or someone added it manually) — leave it alone
+                    continue;
+                }
                 Club club = new Club();
-                club.setName(entry.get("name"));
+                club.setName(name);
                 club.setDescription(entry.get("description"));
                 club.setLogoUrl(entry.get("logoUrl"));
                 club.setImageUrl(entry.get("logoUrl"));
@@ -113,7 +121,8 @@ public class ClubDataSeeder implements CommandLineRunner {
                 clubRepository.save(club);
                 saved++;
             }
-            System.out.println("[ClubDataSeeder] Seeded " + saved + " clubs from data/clubs-seed.json");
+            System.out.println("[ClubDataSeeder] Added " + saved + " new clubs, skipped " + skipped
+                    + " already present (existing clubs, including any manually-added ones, were left untouched)");
         }
     }
 
