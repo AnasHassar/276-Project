@@ -48,13 +48,17 @@ function renderClubs() {
 
   container.innerHTML = filtered.map(club => `
     <div class="club-card">
-      <div class="club-image">${escapeHtml((club.name || '?').charAt(0).toUpperCase())}</div>
+      ${club.logoUrl
+        ? `<img class="club-image club-image--logo" src="${escapeHtml(club.logoUrl)}" alt="${escapeHtml(club.name || '')} logo" loading="lazy" onerror="this.outerHTML='<div class=&quot;club-image&quot;>${escapeHtml((club.name || '?').charAt(0).toUpperCase())}</div>'">`
+        : `<div class="club-image">${escapeHtml((club.name || '?').charAt(0).toUpperCase())}</div>`
+      }
       <div class="club-content">
         <div class="club-name">${escapeHtml(club.name || 'Unnamed club')}</div>
         <span class="club-category">${escapeHtml(club.category || 'General')}</span>
         <div class="club-description">${escapeHtml(club.description || '')}</div>
         <div class="club-meta">
           <span>${Number(club.memberCount) || 0} members</span>
+          ${club.website ? `<a href="${escapeHtml(club.website)}" target="_blank" rel="noopener" class="club-link" onclick="event.stopPropagation()">View on SFSS →</a>` : ''}
         </div>
       </div>
     </div>

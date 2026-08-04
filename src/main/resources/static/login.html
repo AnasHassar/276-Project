@@ -23,8 +23,13 @@
     <label>username
       <input type="text" name="username" placeholder="Enter your username" required>
     </label>
-    <label>Password
-      <input type="password" name="password" placeholder="Enter your password" required>
+     <label>Password
+      <span style="position:relative; display:block; width:100%;">
+        <input type="password" name="password" id="loginPassword" placeholder="Enter your password" required
+          style="width:100%; box-sizing:border-box; padding-right:64px;">
+        <button type="button" onclick="togglePassword('loginPassword', this)"
+          style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--red-bright); cursor:pointer; font-size:0.85rem; font-weight:600; z-index:2;">Show</button>
+      </span>
     </label>
     <button type="submit" class="cta" style="margin-top:8px;">
       <span class="span">LOGIN</span>
@@ -64,8 +69,9 @@
       </span>
     </button>
   </form>
-
   <a href="login.html?role=exec" class="exec-link">Login as an Executive</a>
+  
+  <a href="register.html" class="exec-link">Don't have an account? Register</a>
 
 </div>
 

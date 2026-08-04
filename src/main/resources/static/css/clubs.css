@@ -60,6 +60,13 @@
   font-weight: 700;
 }
 
+.club-image--logo {
+  object-fit: contain;
+  background: #fff;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
 .club-content {
   padding: 1rem 1.25rem 1.25rem;
 }
@@ -103,6 +110,13 @@
   padding-top: 0.75rem;
   border-top: 1px solid var(--border);
 }
+
+.club-link {
+  color: var(--accent, var(--gold));
+  font-weight: 600;
+  text-decoration: none;
+}
+.club-link:hover { text-decoration: underline; }
 
 .clubs-empty {
   color: var(--text-muted);
