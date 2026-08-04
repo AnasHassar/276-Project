@@ -25,7 +25,6 @@ public class TransitController {
     private static final String SURR_STOP_ID = "s-c28xud8vyy-surreycentralstation~platform1";
     @GetMapping("/api/transit")
     public Map<String, Object> getTransit(@RequestParam(defaultValue = "sfu") String stop) {
-
         String stopId;
         String stopName;
 
@@ -95,6 +94,7 @@ public class TransitController {
                 Map<String, Object> bus = new HashMap<>();
                 bus.put("route", routeNum);
                 bus.put("destination", destination);
+                bus.put("departureTime", time);
                 bus.put("minutes", countDown(time));
 
                 buses.add(bus);
@@ -111,26 +111,22 @@ public class TransitController {
         return result;
     }
 
-    public int countDown(String time){
+    public int countDown(String time) {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Vancouver"));
 
-        LocalTime now = ZonedDateTime
-                .now(ZoneId.of("America/Vancouver"))
-                .toLocalTime();
+        String[] splitTime = time.split(":");
 
-        int hour = Integer.parseInt(time.substring(0, 2));
+        int hour = Integer.parseInt(splitTime[0]);
+        int minute = Integer.parseInt(splitTime[1]);
+        int second = Integer.parseInt(splitTime[2]);
+
+        ZonedDateTime departure = now.withHour(hour % 24).withMinute(minute).withSecond(second).withNano(0);
 
         if (hour >= 24) {
-            hour -= 24;
-            LocalTime busTime = LocalTime.parse(String.format("%02d%s", hour, time.substring(2)));
-
-            long minutes = Duration.between(now, busTime).toMinutes();
-            minutes += 24 * 60;
-            return (int) minutes;
+            departure = departure.plusDays(1);
         }
 
-        LocalTime busTime = LocalTime.parse(time);
-
-        long minutes = Duration.between(now, busTime).toMinutes();
+        long minutes = Duration.between(now, departure).toMinutes();
 
         return Math.max((int) minutes, 0);
     }
