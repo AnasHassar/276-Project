@@ -44,18 +44,17 @@
 
   <div class="dashboard-grid">
 
-   <div class="cell cell-weather">
+  <div class="cell cell-weather">
   <div class="flip-card-glow flip-card-glow--static">
-    <div class="weather-widget">
+  <div class="weather-widget">
+    <div class="weather-tabs">
+      <button class="weather-tab active" onclick="loadWeather('sfu', this)">
+        Burnaby
+      </button>
 
-      <div class="weather-tabs">
-        <button class="weather-tab active" onclick="loadWeather('sfu', this)">
-          Burnaby
-        </button>
-
-        <button class="weather-tab" onclick="loadWeather('surrey', this)">
-          Surrey
-        </button>
+      <button class="weather-tab" onclick="loadWeather('surrey', this)">
+        Surrey
+      </button>
       </div>
 
       <div class="campus" id="locationName">SFU BURNABY</div>

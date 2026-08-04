@@ -200,7 +200,7 @@ a { text-decoration: none; color: inherit; }
   font-size: 0.82rem;
   color: var(--text-muted);
 }
-.translink-card { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+.translink-card { display: flex; flex-direction: column; height: 100%; }
 .mini-card {
   display: flex;
   flex-direction: column;

@@ -107,3 +107,13 @@
   margin-top: 12px;
   text-align: center;
 }
+
+.transit-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 180px;
+    text-align: center;
+    color: #777;
+    font-size: 1rem;
+}

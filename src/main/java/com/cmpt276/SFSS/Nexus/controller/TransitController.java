@@ -85,8 +85,7 @@ public class TransitController {
             result.put("trains", trains);
 
         } else {
-
-            // SFU Exchange
+            //SFU Exchange
             List<Map<String, Object>> buses = new ArrayList<>();
 
             for (Map<String, Object> dep : departures) {
