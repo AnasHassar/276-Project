@@ -13,11 +13,8 @@ import java.util.Map;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @RestController
 public class TransitController {
@@ -72,18 +69,17 @@ public class TransitController {
 
                 Map<String, Object> train = new HashMap<>();
                 train.put("destination", destination);
-                train.put("minutes", countDown(time, LocalTime.now()));
+                train.put("minutes", countDown(time));
 
                 trains.add(train);
 
-                if (trains.size() >= 5) {
+                if (trains.size() >= 6) {
                     break;
                 }
             }
 
             result.put("type", "train");
             result.put("trains", trains);
-
         } else {
             //SFU Exchange
             List<Map<String, Object>> buses = new ArrayList<>();
@@ -99,11 +95,11 @@ public class TransitController {
                 Map<String, Object> bus = new HashMap<>();
                 bus.put("route", routeNum);
                 bus.put("destination", destination);
-                bus.put("minutes", countDown(time, LocalTime.now()));
+                bus.put("minutes", countDown(time));
 
                 buses.add(bus);
 
-                if (buses.size() >= 5) {
+                if (buses.size() >= 6) {
                     break;
                 }
             }
@@ -115,8 +111,11 @@ public class TransitController {
         return result;
     }
 
-    public int countDown(String clockTime, LocalTime now){
-        LocalTime busTime = LocalTime.parse(clockTime);
+    public int countDown(String time){
+        LocalTime busTime = LocalTime.parse(time);
+
+        //Force Render to use PST over UTC 
+        LocalTime now = ZonedDateTime.now(ZoneId.of("America/Vancouver")).toLocalTime();
 
         long minutes = Duration.between(now, busTime).toMinutes();
 
